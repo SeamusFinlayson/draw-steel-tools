@@ -50,9 +50,9 @@ export default function BulkEditor(): JSX.Element {
     (appState.showItems === "ALL" ||
       mostRecentSelection.includes(token.item.id) ||
       getIncluded(token.item.id, appState.includedItems)) &&
-    (playerRole === "GM" || !token.hideStats) &&
-    !(appState.operation === "damage" && token.maxHealth <= 0) &&
-    !(appState.operation === "healing" && token.maxHealth <= 0);
+    (playerRole === "GM" || !token.gmOnly) &&
+    !(appState.operation === "damage" && token.staminaMaximum <= 0) &&
+    !(appState.operation === "healing" && token.staminaMaximum <= 0);
   const selectedTokens = tokens.filter(selectionFilter);
 
   function handleDragEnd(event: DragEndEvent) {
@@ -215,11 +215,8 @@ export default function BulkEditor(): JSX.Element {
           playerName={playerName}
         ></Header>
         <ScrollArea className="h-full sm:px-4">
-          <div className="flex flex-col items-center justify-start gap-2 pb-2">
-            {getTable(appState.operation)}
-            {playerRole === "GM" && (
-              <ChangeShowItemsButton appState={appState} dispatch={dispatch} />
-            )}
+          <div className="flex flex-col items-center justify-start gap-2 p-4 text-text-secondary dark:text-text-secondary-dark">
+            This part is in progress...
           </div>
           <ScrollBar orientation="horizontal" forceMount />
         </ScrollArea>

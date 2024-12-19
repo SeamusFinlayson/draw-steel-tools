@@ -39,28 +39,6 @@ export default function Header({
       ></Command>
       {playerRole === "GM" ? (
         <>
-          <Select
-            value={appState.operation}
-            onValueChange={(value) => {
-              dispatch({
-                type: "set-operation",
-                operation: value as Operation,
-              });
-            }}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Editor Mode" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectLabel>Operation</SelectLabel>
-                <SelectItem value="none">None</SelectItem>
-                <SelectItem value="damage">Damage</SelectItem>
-                <SelectItem value="healing">Heal</SelectItem>
-                <SelectItem value="overwrite">Overwrite Multiple</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
           <Button
             size={"icon"}
             variant={"outline"}

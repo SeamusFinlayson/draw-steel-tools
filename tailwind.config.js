@@ -64,11 +64,11 @@ export default {
             },
           },
           blue: {
-            DEFAULT: "hsl(219, 79%, 66%)",
-            dark: "hsl(219, 79%, 66%)",
+            DEFAULT: "hsl(200, 79%, 66%)",
+            dark: "hsl(200, 79%, 66%)",
             highlight: {
-              DEFAULT: "hsl(219, 79%, 66%)",
-              dark: "hsl(219, 55%, 55%)",
+              DEFAULT: "hsl(200, 79%, 66%)",
+              dark: "hsl(200, 55%, 55%)",
             },
           },
           green: {

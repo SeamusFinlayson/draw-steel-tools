@@ -145,10 +145,11 @@ export function createHealthBar(
     .points(createRoundedRectangle(barWidth, barHeight, BAR_CORNER_RADIUS))
     .build();
 
-  const healthFillPortion = getFillPortion(health, maxHealth, segments);
+  const fillPortion = getFillPortion(health, maxHealth, segments);
+  const fillColor = health >= 0 ? "red" : "darkviolet";
 
   const fillShape = buildCurve()
-    .fillColor("red")
+    .fillColor(fillColor)
     .fillOpacity(HEALTH_OPACITY)
     .zIndex(20000)
     .position({ x: position.x, y: position.y })
@@ -168,7 +169,7 @@ export function createHealthBar(
         barWidth,
         barHeight,
         BAR_CORNER_RADIUS,
-        healthFillPortion,
+        fillPortion,
       ),
     )
     .build();

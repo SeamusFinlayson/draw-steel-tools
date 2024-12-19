@@ -1,11 +1,11 @@
 import OBR, { isImage, Item } from "@owlbear-rodeo/sdk";
 
 import {
-  HEALTH_METADATA_ID,
-  MAX_HEALTH_METADATA_ID,
-  TEMP_HEALTH_METADATA_ID,
-  ARMOR_CLASS_METADATA_ID,
-  HIDE_METADATA_ID,
+  STAMINA_METADATA_ID,
+  STAMINA_MAXIMUM_METADATA_ID,
+  TEMP_STAMINA_METADATA_ID,
+  HEROIC_RESOURCE_METADATA_ID,
+  GM_ONLY_METADATA_ID,
   GROUP_METADATA_ID,
   INDEX_METADATA_ID,
 } from "./itemMetadataIds";
@@ -29,21 +29,7 @@ export function parseItems(items: Item[]): Token[] {
   const validItems = items.filter((item) => itemFilter(item));
 
   const Tokens: Token[] = [];
-  for (const item of validItems) {
-    const metadata = getPluginMetadata(item.metadata);
-    Tokens.push(
-      tokenFactory(
-        item,
-        readNumberFromObject(metadata, HEALTH_METADATA_ID),
-        readNumberFromObject(metadata, MAX_HEALTH_METADATA_ID),
-        readNumberFromObject(metadata, TEMP_HEALTH_METADATA_ID),
-        readNumberFromObject(metadata, ARMOR_CLASS_METADATA_ID),
-        readBooleanFromObject(metadata, HIDE_METADATA_ID),
-        readNumberFromObject(metadata, GROUP_METADATA_ID),
-        readNumberFromObject(metadata, INDEX_METADATA_ID, -1),
-      ),
-    );
-  }
+  for (const item of validItems) Tokens.push(parseItem(item));
 
   return Tokens;
 }
@@ -55,23 +41,18 @@ export function itemFilter(item: Item) {
   );
 }
 
-export function getTokenStats(
-  item: Item,
-): [
-  health: number,
-  maxHealth: number,
-  tempHealth: number,
-  armorClass: number,
-  statsVisible: boolean,
-] {
+export function parseItem(item: Item): Token {
   const metadata = getPluginMetadata(item.metadata);
-  return [
-    readNumberFromObject(metadata, HEALTH_METADATA_ID),
-    readNumberFromObject(metadata, MAX_HEALTH_METADATA_ID),
-    readNumberFromObject(metadata, TEMP_HEALTH_METADATA_ID),
-    readNumberFromObject(metadata, ARMOR_CLASS_METADATA_ID),
-    !readBooleanFromObject(metadata, HIDE_METADATA_ID),
-  ];
+  return tokenFactory(
+    item,
+    readNumberFromObject(metadata, STAMINA_METADATA_ID),
+    readNumberFromObject(metadata, STAMINA_MAXIMUM_METADATA_ID),
+    readNumberFromObject(metadata, TEMP_STAMINA_METADATA_ID),
+    readNumberFromObject(metadata, HEROIC_RESOURCE_METADATA_ID),
+    readBooleanFromObject(metadata, GM_ONLY_METADATA_ID),
+    readNumberFromObject(metadata, GROUP_METADATA_ID),
+    readNumberFromObject(metadata, INDEX_METADATA_ID, -1),
+  );
 }
 
 export function tokenFactory(
@@ -86,11 +67,11 @@ export function tokenFactory(
 ): Token {
   return {
     item,
-    health,
-    maxHealth,
-    tempHealth,
-    armorClass,
-    hideStats,
+    stamina: health,
+    staminaMaximum: maxHealth,
+    temporaryStamina: tempHealth,
+    heroicResource: armorClass,
+    gmOnly: hideStats,
     group,
     index,
   };

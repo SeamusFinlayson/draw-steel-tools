@@ -18,7 +18,7 @@ import {
   thpTextId,
 } from "./compoundItemHelpers";
 import { getOriginAndBounds } from "./mathHelpers";
-import { getTokenStats } from "../metadataHelpers/itemMetadataHelpers";
+import { parseItem } from "../metadataHelpers/itemMetadataHelpers";
 import createContextMenuItems from "./contextMenuItems";
 import { getName, NAME_METADATA_ID } from "@/metadataHelpers/nameHelpers";
 import { Settings } from "@/metadataHelpers/settingMetadataHelpers";
@@ -230,16 +230,14 @@ function getChangedItems(imagesFromCallback: Image[]) {
 
 function createAttachments(item: Image, role: "PLAYER" | "GM", dpi: number) {
   const { origin, bounds } = getOriginAndBounds(settings, item, dpi);
+  const token = parseItem(item);
 
-  // Create stats
-  const [health, maxHealth, tempHealth, armorClass, statsVisible] =
-    getTokenStats(item);
-  if (role === "PLAYER" && !statsVisible && !settings.showBars) {
+  if (role === "PLAYER" && token.gmOnly && !settings.showBars) {
     // Display nothing, explicitly remove all attachments
     addHealthAttachmentsToArray(deleteItemsArray, item.id);
     addArmorAttachmentsToArray(deleteItemsArray, item.id);
     addTempHealthAttachmentsToArray(deleteItemsArray, item.id);
-  } else if (role === "PLAYER" && !statsVisible && settings.showBars) {
+  } else if (role === "PLAYER" && token.gmOnly && settings.showBars) {
     // Display limited stats depending on GM configuration
     createLimitedHealthBar();
   } else {
@@ -258,11 +256,11 @@ function createAttachments(item: Image, role: "PLAYER" | "GM", dpi: number) {
     };
     if (settings.barAtTop) {
       if (
-        maxHealth <= 0 ||
-        (role === "PLAYER" && !statsVisible && !settings.showBars)
+        token.staminaMaximum <= 0 ||
+        (role === "PLAYER" && token.gmOnly && !settings.showBars)
       ) {
         nameTagPosition.y = origin.y - 4;
-      } else if (role === "PLAYER" && !statsVisible && settings.showBars) {
+      } else if (role === "PLAYER" && token.gmOnly && settings.showBars) {
         nameTagPosition.y = origin.y - SHORT_BAR_HEIGHT - 4;
       } else {
         nameTagPosition.y = origin.y - FULL_BAR_HEIGHT - 4;
@@ -289,7 +287,7 @@ function createAttachments(item: Image, role: "PLAYER" | "GM", dpi: number) {
     addTempHealthAttachmentsToArray(deleteItemsArray, item.id);
 
     // return early if health bar shouldn't be created
-    if (maxHealth <= 0) {
+    if (token.staminaMaximum <= 0) {
       addHealthAttachmentsToArray(deleteItemsArray, item.id);
       return;
     }
@@ -299,9 +297,9 @@ function createAttachments(item: Image, role: "PLAYER" | "GM", dpi: number) {
       ...createHealthBar(
         item,
         bounds,
-        health,
-        maxHealth,
-        statsVisible,
+        token.stamina,
+        token.staminaMaximum,
+        !token.gmOnly,
         origin,
         "short",
         settings.segments,
@@ -315,13 +313,20 @@ function createAttachments(item: Image, role: "PLAYER" | "GM", dpi: number) {
    */
   function createFullHealthBar() {
     // return early if health bar shouldn't be created
-    if (maxHealth <= 0) {
+    if (token.staminaMaximum <= 0) {
       addHealthAttachmentsToArray(deleteItemsArray, item.id);
       return false;
     }
 
     addItemsArray.push(
-      ...createHealthBar(item, bounds, health, maxHealth, statsVisible, origin),
+      ...createHealthBar(
+        item,
+        bounds,
+        token.stamina,
+        token.staminaMaximum,
+        !token.gmOnly,
+        origin,
+      ),
     );
     return true;
   }
@@ -332,7 +337,7 @@ function createAttachments(item: Image, role: "PLAYER" | "GM", dpi: number) {
    */
   function createArmorClass(hasHealthBar: boolean) {
     // return early if armor class bubble shouldn't be created
-    if (armorClass <= 0) {
+    if (token.heroicResource <= 0) {
       addArmorAttachmentsToArray(deleteItemsArray, item.id);
       return false;
     }
@@ -348,7 +353,7 @@ function createAttachments(item: Image, role: "PLAYER" | "GM", dpi: number) {
     addItemsArray.push(
       ...createStatBubble(
         item,
-        armorClass,
+        token.heroicResource,
         "cornflowerblue", //"#5c8fdb"
         armorPosition,
         acBackgroundId(item.id),
@@ -367,7 +372,7 @@ function createAttachments(item: Image, role: "PLAYER" | "GM", dpi: number) {
     hasArmorClassBubble: boolean,
   ) {
     // return early if temp health bubble shouldn't be created
-    if (tempHealth <= 0) {
+    if (token.temporaryStamina <= 0) {
       addTempHealthAttachmentsToArray(deleteItemsArray, item.id);
       return;
     }
@@ -387,7 +392,7 @@ function createAttachments(item: Image, role: "PLAYER" | "GM", dpi: number) {
     addItemsArray.push(
       ...createStatBubble(
         item,
-        tempHealth,
+        token.temporaryStamina,
         "olivedrab",
         tempHealthPosition,
         thpBackgroundId(item.id),

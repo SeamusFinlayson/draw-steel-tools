@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils";
 import PartiallyControlledInput from "./StatInput";
-import { InputName } from "@/statInputHelpers";
 import { InputColor } from "@/colorHelpers";
 import StatToolTip from "./StatToolTip";
 import { useState } from "react";
+import { StatMetadataID } from "@/metadataHelpers/itemMetadataIds";
 
 export default function BarInput({
   parentValue,
@@ -20,8 +20,8 @@ export default function BarInput({
   color: InputColor;
   valueUpdateHandler: (target: HTMLInputElement) => Promise<void>;
   maxUpdateHandler: (target: HTMLInputElement) => Promise<void>;
-  valueName: InputName;
-  maxName: InputName;
+  valueName: StatMetadataID;
+  maxName: StatMetadataID;
   animateOnlyWhenRootActive?: boolean;
 }): JSX.Element {
   const [valueHasFocus, setValueHasFocus] = useState(false);

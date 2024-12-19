@@ -1,13 +1,17 @@
 import OBR from "@owlbear-rodeo/sdk";
 import { getPluginId } from "./getPluginId";
 import {
-  ARMOR_CLASS_METADATA_ID,
-  HEALTH_METADATA_ID,
-  HIDE_METADATA_ID,
-  MAX_HEALTH_METADATA_ID,
+  HEROIC_RESOURCE_METADATA_ID,
+  STAMINA_METADATA_ID,
+  STAMINA_MAXIMUM_METADATA_ID,
   StatMetadataID,
-  TEMP_HEALTH_METADATA_ID,
+  TEMP_STAMINA_METADATA_ID,
+  statMetadataIDs,
 } from "./metadataHelpers/itemMetadataIds";
+
+export function isStatMetadataId(id: string): id is StatMetadataID {
+  return statMetadataIDs.includes(id as StatMetadataID);
+}
 
 export type InputName =
   | "health"
@@ -16,25 +20,11 @@ export type InputName =
   | "armorClass"
   | "hideStats";
 
-const inputNames: InputName[] = [
-  "health",
-  "maxHealth",
-  "tempHealth",
-  "armorClass",
-  "hideStats",
-];
-
-export function isInputName(id: string): id is InputName {
-  return inputNames.includes(id as InputName);
-}
-
 export async function writeTokenValueToItem(
   itemId: string,
-  name: InputName,
+  id: StatMetadataID,
   value: number | boolean,
 ) {
-  const id = convertInputNameToMetadataId(name);
-
   await OBR.scene.items.updateItems([itemId], (items) => {
     // Throw error if more than one token selected
     if (items.length > 1) {
@@ -53,21 +43,27 @@ export async function writeTokenValueToItem(
 }
 
 export function getNewStatValue(
-  name: InputName,
+  id: StatMetadataID,
   inputContent: string,
   previousValue: number,
 ): number {
-  return restrictValueRange(
-    convertInputNameToMetadataId(name),
-    inlineMath(inputContent, previousValue),
-  );
+  return restrictValueRange(id, inlineMath(inputContent, previousValue));
 }
 
 function inlineMath(inputContent: string, previousValue: number): number {
+  let doInlineMath = true;
+  if (inputContent.startsWith("=")) {
+    inputContent = inputContent.substring(1).trim();
+    doInlineMath = false;
+  }
+
   const newValue = parseFloat(inputContent);
 
   if (Number.isNaN(newValue)) return 0;
-  if (inputContent.startsWith("+") || inputContent.startsWith("-")) {
+  if (
+    doInlineMath &&
+    (inputContent.startsWith("+") || inputContent.startsWith("-"))
+  ) {
     return Math.trunc(previousValue + Math.trunc(newValue));
   }
 
@@ -76,16 +72,16 @@ function inlineMath(inputContent: string, previousValue: number): number {
 
 function restrictValueRange(id: StatMetadataID, value: number): number {
   switch (id) {
-    case HEALTH_METADATA_ID:
-    case MAX_HEALTH_METADATA_ID:
+    case STAMINA_METADATA_ID:
+    case STAMINA_MAXIMUM_METADATA_ID:
       if (value > 9999) {
         value = 9999;
       } else if (value < -999) {
         value = -999;
       }
       break;
-    case TEMP_HEALTH_METADATA_ID:
-    case ARMOR_CLASS_METADATA_ID:
+    case TEMP_STAMINA_METADATA_ID:
+    case HEROIC_RESOURCE_METADATA_ID:
       if (value > 999) {
         value = 999;
       } else if (value < -999) {
@@ -96,19 +92,4 @@ function restrictValueRange(id: StatMetadataID, value: number): number {
       break;
   }
   return value;
-}
-
-function convertInputNameToMetadataId(id: InputName): StatMetadataID {
-  switch (id) {
-    case "health":
-      return HEALTH_METADATA_ID;
-    case "maxHealth":
-      return MAX_HEALTH_METADATA_ID;
-    case "tempHealth":
-      return TEMP_HEALTH_METADATA_ID;
-    case "armorClass":
-      return ARMOR_CLASS_METADATA_ID;
-    case "hideStats":
-      return HIDE_METADATA_ID;
-  }
 }

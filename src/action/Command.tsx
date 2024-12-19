@@ -42,16 +42,6 @@ const gmCommands = new Map<string, CommandType>([
       : "Invalid Roll";
   }),
 
-  commandFactory("d", "Roll Damage", (string: string) => {
-    return validRoll(extractCommandContent(string))
-      ? `Roll ${extractCommandContent(string)} damage`
-      : "Invalid Roll";
-  }),
-  commandFactory("h", "Roll Healing", (string: string) => {
-    return validRoll(extractCommandContent(string))
-      ? `Roll ${extractCommandContent(string)} healing`
-      : "Invalid Roll";
-  }),
   // commandFactory("o", "Overwrite Multiple Token Stats", () => {
   //   return `Switch to overwrite operation`;
   // }),

@@ -28,7 +28,7 @@ import { useEffect, useState } from "react";
 import {
   getNewStatValue,
   InputName,
-  isInputName,
+  isStatMetadataId,
   writeTokenValueToItem,
 } from "@/statInputHelpers";
 import StatStyledInput from "./StatStyledInput";
@@ -151,51 +151,51 @@ export function SetValuesTable({
                     <div className="grid min-w-[140px] grid-cols-2 justify-items-stretch gap-2 sm:min-w-[250px] sm:grid-cols-4">
                       <div className="col-span-2 flex items-center justify-between gap-1">
                         <StatInput
-                          parentValue={token.health}
+                          parentValue={token.stamina}
                           name={"health"}
                           updateHandler={(target) =>
                             handleStatUpdate(
                               token.item.id,
                               target,
-                              token.health,
+                              token.stamina,
                               setTokens,
                             )
                           }
                         ></StatInput>
                         <div>{"/"}</div>
                         <StatInput
-                          parentValue={token.maxHealth}
+                          parentValue={token.staminaMaximum}
                           name={"maxHealth"}
                           updateHandler={(target) =>
                             handleStatUpdate(
                               token.item.id,
                               target,
-                              token.maxHealth,
+                              token.staminaMaximum,
                               setTokens,
                             )
                           }
                         ></StatInput>
                       </div>
                       <StatInput
-                        parentValue={token.tempHealth}
+                        parentValue={token.temporaryStamina}
                         name={"tempHealth"}
                         updateHandler={(target) =>
                           handleStatUpdate(
                             token.item.id,
                             target,
-                            token.tempHealth,
+                            token.temporaryStamina,
                             setTokens,
                           )
                         }
                       ></StatInput>
                       <StatInput
-                        parentValue={token.armorClass}
+                        parentValue={token.heroicResource}
                         name={"armorClass"}
                         updateHandler={(target) =>
                           handleStatUpdate(
                             token.item.id,
                             target,
-                            token.armorClass,
+                            token.heroicResource,
                             setTokens,
                           )
                         }
@@ -227,15 +227,15 @@ function AccessButton({
             variant={"ghost"}
             size={"icon"}
             name={
-              token.hideStats
+              token.gmOnly
                 ? "Make Stats Visible to Players"
                 : "Hide Stats from players"
             }
             onClick={() =>
-              handleHiddenUpdate(token.item.id, token.hideStats, setTokens)
+              handleHiddenUpdate(token.item.id, token.gmOnly, setTokens)
             }
           >
-            {token.hideStats ? (
+            {token.gmOnly ? (
               <div className="text-primary-500 dark:text-primary-dark">
                 <BookLock />
               </div>
@@ -245,7 +245,7 @@ function AccessButton({
           </Button>
         </TooltipTrigger>
         <TooltipContent side="right">
-          {token.hideStats ? "Dungeon Master Only" : "Player Editable"}
+          {token.gmOnly ? "Dungeon Master Only" : "Player Editable"}
         </TooltipContent>
       </Tooltip>
     </TableCell>
@@ -296,9 +296,9 @@ export function DamageTable({
             appState.value ? appState.value : 0,
           );
           const [newHealth, newTempHealth] = calculateNewHealth(
-            token.health,
-            token.maxHealth,
-            token.tempHealth,
+            token.stamina,
+            token.staminaMaximum,
+            token.temporaryStamina,
             -1 * scaledDamage,
           );
 
@@ -486,7 +486,7 @@ async function handleHiddenUpdate(
   setTokens: React.Dispatch<React.SetStateAction<Token[]>>,
 ) {
   const name: InputName = "hideStats";
-  if (!isInputName(name)) throw "Error: invalid input name.";
+  if (!isStatMetadataId(name)) throw "Error: invalid input name.";
 
   const value = !previousValue;
 
@@ -508,7 +508,7 @@ function handleStatUpdate(
   setTokens: React.Dispatch<React.SetStateAction<Token[]>>,
 ) {
   const name = target.name;
-  if (!isInputName(name)) throw "Error: invalid input name.";
+  if (!isStatMetadataId(name)) throw "Error: invalid input name.";
 
   const value = getNewStatValue(name, target.value, previousValue);
 

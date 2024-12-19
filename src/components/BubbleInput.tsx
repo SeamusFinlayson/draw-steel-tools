@@ -1,21 +1,24 @@
-import { InputName } from "@/statInputHelpers";
 import PartiallyControlledInput from "./StatInput";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { InputColor } from "@/colorHelpers";
-import StatToolTip from "./StatToolTip";
+import { StatMetadataID } from "@/metadataHelpers/itemMetadataIds";
 
 export default function BubbleInput({
   parentValue,
   color,
   updateHandler,
   name,
+  label,
+  hideLabel = false,
   animateOnlyWhenRootActive = false,
 }: {
   parentValue: number;
   color: InputColor;
   updateHandler: (target: HTMLInputElement) => void;
-  name: InputName;
+  name: StatMetadataID;
+  label: string;
+  hideLabel?: boolean;
   animateOnlyWhenRootActive?: boolean;
 }): JSX.Element {
   const [hasFocus, setHasFocus] = useState(false);
@@ -23,40 +26,68 @@ export default function BubbleInput({
   const animationDuration75 = animateOnlyWhenRootActive
     ? "group-focus-within/root:duration-75 group-hover/root:duration-75"
     : "duration-75";
-  const animationDuration100 = animateOnlyWhenRootActive
-    ? "group-focus-within/root:duration-100 group-hover/root:duration-100"
-    : "duration-100";
+  const animationDuration150 = animateOnlyWhenRootActive
+    ? "group-focus-within/root:duration-150 group-hover/root:duration-150"
+    : "duration-150";
 
   return (
-    <div
-      className={`${animationDuration75} grid grid-cols-1 grid-rows-1 place-items-center drop-shadow-sm focus-within:drop-shadow-md`}
-    >
+    <div>
+      <div
+        className={cn("bg-gradient-to-t", {
+          "from-stat-red/10 dark:from-stat-red-dark/10": color === "RED",
+          "from-stat-green/10 dark:from-stat-green-dark/10": color === "GREEN",
+          "from-stat-blue/10 dark:from-stat-blue-dark/10": color === "BLUE",
+        })}
+      >
+        <label
+          htmlFor={name}
+          className={cn(
+            "text-xs font-normal text-text-secondary dark:text-text-secondary-dark",
+            { invisible: hideLabel === true },
+          )}
+        >
+          {label}
+        </label>
+
+        <PartiallyControlledInput
+          id={name}
+          name={name}
+          onFocus={() => setHasFocus(true)}
+          onBlur={() => setHasFocus(false)}
+          parentValue={parentValue.toString()}
+          onUserConfirm={updateHandler}
+          className={cn("peer w-full bg-transparent outline-none")}
+        />
+        <div
+          className={cn(
+            animationDuration75,
+            "flex min-h-[2px] gap-2 border-b-2",
+            {
+              "border-stat-red dark:border-stat-red-dark": color === "RED",
+              "border-stat-green dark:border-stat-green-dark":
+                color === "GREEN",
+              "border-stat-blue dark:border-stat-blue-dark": color === "BLUE",
+              "border-b border-text-secondary hover:border-text-primary peer-hover:border-b-2 dark:border-text-secondary-dark dark:peer-hover:border-text-primary-dark":
+                !hasFocus,
+            },
+          )}
+        ></div>
+      </div>
       <div
         className={cn(
-          animationDuration100,
+          animationDuration150,
+          "rounded-b-sm px-0.5 text-xs transition-all",
+          { "bg-stat-red-dark/25": color === "RED" },
+          { "bg-stat-green-dark/25": color === "GREEN" },
+          { "bg-stat-blue-dark/25": color === "BLUE" },
           {
-            "bg-stat-green/40 focus-within:bg-stat-green/10 dark:bg-stat-green-dark/30 dark:focus-within:bg-stat-green-dark/10 dark:focus-within:outline-stat-green-highlight-dark":
-              color === "GREEN",
-            "bg-stat-blue/40 focus-within:bg-stat-blue/10 dark:bg-stat-blue-dark/30 dark:focus-within:bg-stat-blue-dark/10 dark:focus-within:outline-stat-blue-highlight-dark":
-              color === "BLUE",
+            "translate-y-0 opacity-100": true,
+            "pointer-events-none -translate-y-2 opacity-0":
+              !hasFocus || parentValue === 0,
           },
-          "peer col-span-full row-span-full size-[44px] rounded-full bg-opacity-0 dark:outline dark:outline-2 dark:-outline-offset-2 dark:outline-white/40",
         )}
       >
-        <StatToolTip
-          open={hasFocus && parentValue !== 0}
-          text={parentValue.toString()}
-          color={color}
-        >
-          <PartiallyControlledInput
-            name={name}
-            onFocus={() => setHasFocus(true)}
-            onBlur={() => setHasFocus(false)}
-            parentValue={parentValue.toString()}
-            onUserConfirm={updateHandler}
-            className={`${animationDuration100} size-[44px] rounded-full bg-transparent text-center font-normal text-text-primary outline-none dark:text-text-primary-dark`}
-          />
-        </StatToolTip>
+        {parentValue}
       </div>
     </div>
   );

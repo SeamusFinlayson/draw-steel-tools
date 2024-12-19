@@ -4,7 +4,7 @@ import menuIcon from "@/menuIcon";
 import { Settings } from "@/metadataHelpers/settingMetadataHelpers";
 
 const NAME_HEIGHT = 40;
-const STATS_HEIGHT = 84;
+const STATS_HEIGHT = 140;
 const HIDE_HEIGHT = 50;
 const BOTTOM_PADDING = 2;
 

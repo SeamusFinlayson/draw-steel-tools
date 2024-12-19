@@ -5,9 +5,11 @@ import {
   calculateScaledHealthDiff,
 } from "./healthCalculations";
 import {
-  HEALTH_METADATA_ID,
+  HEROIC_RESOURCE_METADATA_ID,
+  STAMINA_MAXIMUM_METADATA_ID,
+  STAMINA_METADATA_ID,
   StatMetadataID,
-  TEMP_HEALTH_METADATA_ID,
+  TEMP_STAMINA_METADATA_ID,
 } from "@/metadataHelpers/itemMetadataIds";
 import { getPluginId } from "@/getPluginId";
 import {
@@ -76,15 +78,15 @@ export async function applyHealthDiffToItems(
 
         // Set new health and temp health values
         const [newHealth, newTempHealth] = calculateNewHealth(
-          tokens[i].health.valueOf(),
-          tokens[i].maxHealth.valueOf(),
-          tokens[i].tempHealth.valueOf(),
+          tokens[i].stamina.valueOf(),
+          tokens[i].staminaMaximum.valueOf(),
+          tokens[i].temporaryStamina.valueOf(),
           scaledHealthDiff,
         );
 
         const newMetadata = {
-          [HEALTH_METADATA_ID]: newHealth,
-          [TEMP_HEALTH_METADATA_ID]: newTempHealth,
+          [STAMINA_METADATA_ID]: newHealth,
+          [TEMP_STAMINA_METADATA_ID]: newTempHealth,
         };
 
         let retrievedMetadata: any;
@@ -120,10 +122,10 @@ export async function overwriteStats(
         if (included) {
           let newMetadata = {};
           const stats: [string, StatMetadataID][] = [
-            [statOverwrites.hitPoints, "health"],
-            [statOverwrites.maxHitPoints, "max health"],
-            [statOverwrites.tempHitPoints, "temporary health"],
-            [statOverwrites.armorClass, "armor class"],
+            [statOverwrites.hitPoints, STAMINA_METADATA_ID],
+            [statOverwrites.maxHitPoints, STAMINA_MAXIMUM_METADATA_ID],
+            [statOverwrites.tempHitPoints, TEMP_STAMINA_METADATA_ID],
+            [statOverwrites.armorClass, HEROIC_RESOURCE_METADATA_ID],
           ];
 
           for (const stat of stats) {

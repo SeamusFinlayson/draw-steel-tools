@@ -9,7 +9,9 @@ import { Vector2, Image, Math2 } from "@owlbear-rodeo/sdk";
  * @returns The portion of the bar to be filled (between 0 and 1).
  */
 export function getFillPortion(value: number, maxValue: number, segments = 0) {
-  if (value <= 0) return 0;
+  if (value === 0) return 0;
+  if (2 * value <= -maxValue) return -1;
+  if (value < 0) return (2 * value) / maxValue;
   if (value >= maxValue) return 1;
   if (segments === 0) return value / maxValue;
   return Math.ceil((value / maxValue) * segments) / segments;
@@ -35,90 +37,135 @@ export function createRoundedRectangle(
     radius = height * 0.5;
   }
 
-  if (fill >= 1) {
-    // Draw full shape
-    return [
-      { x: radius, y: 0 },
-      { x: maxLength - radius, y: 0 },
-      ...drawArc(
-        { x: maxLength - radius, y: radius },
-        radius,
-        Math.PI * 0.5,
-        -Math.PI * 0.5,
-        pointsInCorner,
-      ),
-      ...drawArc(
-        { x: maxLength - radius, y: height - radius },
-        radius,
-        0,
-        -Math.PI * 0.5,
-        pointsInCorner,
-      ),
-      { x: maxLength - radius, y: height },
-      { x: 0 + radius, y: height },
-      ...drawArc(
-        { x: radius, y: height - radius },
-        radius,
-        -Math.PI * 0.5,
-        -Math.PI * 0.5,
-        pointsInCorner,
-      ),
-      ...drawArc(
-        { x: radius, y: radius },
-        radius,
-        -Math.PI,
-        -Math.PI * 0.5,
-        pointsInCorner,
-      ),
-    ];
+  let flipPoints = false;
+  if (fill < 0) {
+    flipPoints = true;
+    fill = Math.abs(fill);
   }
 
-  const barLength = fill * maxLength;
-  if (barLength < radius) {
-    // Draw only part of the left end
-    const referenceAngle = Math.acos((radius - barLength) / radius);
+  const shapePoints = getShapePoints();
 
-    return [
-      ...drawArc(
-        { x: radius, y: height - radius },
-        radius,
-        Math.PI + referenceAngle,
-        -referenceAngle,
-        pointsInCorner,
-      ),
-      ...drawArc(
-        { x: radius, y: radius },
-        radius,
-        Math.PI,
-        -referenceAngle,
-        pointsInCorner,
-      ),
-    ];
+  if (flipPoints) {
+    const flippedShapePoints: Vector2[] = [];
+    for (const point of shapePoints) {
+      flippedShapePoints.push({
+        x: -1 * point.x + maxLength,
+        y: point.y,
+      });
+    }
+    return flippedShapePoints;
   }
 
-  const remainingBarLength = maxLength - barLength;
-  if (remainingBarLength < radius) {
-    // Draw the left end the middle and part of the right end
-    const referenceAngle = Math.acos((radius - remainingBarLength) / radius);
+  return shapePoints;
 
+  function getShapePoints(): Vector2[] {
+    if (fill >= 1) {
+      // Draw full shape
+      return [
+        { x: radius, y: 0 },
+        { x: maxLength - radius, y: 0 },
+        ...drawArc(
+          { x: maxLength - radius, y: radius },
+          radius,
+          Math.PI * 0.5,
+          -Math.PI * 0.5,
+          pointsInCorner,
+        ),
+        ...drawArc(
+          { x: maxLength - radius, y: height - radius },
+          radius,
+          0,
+          -Math.PI * 0.5,
+          pointsInCorner,
+        ),
+        { x: maxLength - radius, y: height },
+        { x: 0 + radius, y: height },
+        ...drawArc(
+          { x: radius, y: height - radius },
+          radius,
+          -Math.PI * 0.5,
+          -Math.PI * 0.5,
+          pointsInCorner,
+        ),
+        ...drawArc(
+          { x: radius, y: radius },
+          radius,
+          -Math.PI,
+          -Math.PI * 0.5,
+          pointsInCorner,
+        ),
+      ];
+    }
+
+    const barLength = fill * maxLength;
+    if (barLength < radius) {
+      // Draw only part of the left end
+      const referenceAngle = Math.acos((radius - barLength) / radius);
+
+      return [
+        ...drawArc(
+          { x: radius, y: height - radius },
+          radius,
+          Math.PI + referenceAngle,
+          -referenceAngle,
+          pointsInCorner,
+        ),
+        ...drawArc(
+          { x: radius, y: radius },
+          radius,
+          Math.PI,
+          -referenceAngle,
+          pointsInCorner,
+        ),
+      ];
+    }
+
+    const remainingBarLength = maxLength - barLength;
+    if (remainingBarLength < radius) {
+      // Draw the left end the middle and part of the right end
+      const referenceAngle = Math.acos((radius - remainingBarLength) / radius);
+
+      return [
+        { x: radius, y: 0 },
+        { x: maxLength - radius, y: 0 },
+        ...drawArc(
+          { x: maxLength - radius, y: radius },
+          radius,
+          Math.PI * 0.5,
+          -Math.PI * 0.5 + referenceAngle,
+          pointsInCorner,
+        ),
+        ...drawArc(
+          { x: maxLength - radius, y: height - radius },
+          radius,
+          -referenceAngle,
+          -Math.PI * 0.5 + referenceAngle,
+          pointsInCorner,
+        ),
+        { x: maxLength - radius, y: height },
+        { x: radius, y: height },
+        ...drawArc(
+          { x: radius, y: height - radius },
+          radius,
+          -Math.PI * 0.5,
+          -Math.PI * 0.5,
+          pointsInCorner,
+        ),
+        ...drawArc(
+          { x: radius, y: radius },
+          radius,
+          -Math.PI,
+          -Math.PI * 0.5,
+          pointsInCorner,
+        ),
+      ];
+    }
+
+    // Draw the left end and the middle
     return [
       { x: radius, y: 0 },
-      { x: maxLength - radius, y: 0 },
-      ...drawArc(
-        { x: maxLength - radius, y: radius },
-        radius,
-        Math.PI * 0.5,
-        -Math.PI * 0.5 + referenceAngle,
-        pointsInCorner,
-      ),
-      ...drawArc(
-        { x: maxLength - radius, y: height - radius },
-        radius,
-        -referenceAngle,
-        -Math.PI * 0.5 + referenceAngle,
-        pointsInCorner,
-      ),
-      { x: maxLength - radius, y: height },
+      { x: barLength, y: 0 },
+      { x: barLength, y: height },
       { x: radius, y: height },
       ...drawArc(
         { x: radius, y: height - radius },
@@ -136,28 +183,6 @@ export function createRoundedRectangle(
       ),
     ];
   }
-
-  // Draw the left end and the middle
-  return [
-    { x: radius, y: 0 },
-    { x: barLength, y: 0 },
-    { x: barLength, y: height },
-    { x: radius, y: height },
-    ...drawArc(
-      { x: radius, y: height - radius },
-      radius,
-      -Math.PI * 0.5,
-      -Math.PI * 0.5,
-      pointsInCorner,
-    ),
-    ...drawArc(
-      { x: radius, y: radius },
-      radius,
-      -Math.PI,
-      -Math.PI * 0.5,
-      pointsInCorner,
-    ),
-  ];
 }
 
 /** Generates a curve in the shape of an arc of a circle for Owlbear Rodeo.
