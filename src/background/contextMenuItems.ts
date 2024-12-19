@@ -4,15 +4,15 @@ import menuIcon from "@/menuIcon";
 import { Settings } from "@/metadataHelpers/settingMetadataHelpers";
 
 const NAME_HEIGHT = 40;
-const STATS_HEIGHT = 140;
-const HIDE_HEIGHT = 50;
-const BOTTOM_PADDING = 2;
+const STATS_HEIGHT = 132;
+const HIDE_HEIGHT = 40;
+const PADDING = 8;
 
 export default async function createContextMenuItems(
   settings: Settings,
   themeMode: "DARK" | "LIGHT",
 ) {
-  let menuHeight = STATS_HEIGHT + BOTTOM_PADDING;
+  let menuHeight = STATS_HEIGHT + PADDING;
   if (settings.nameTags) menuHeight += NAME_HEIGHT;
 
   createPlayerMenu(themeMode, menuHeight);
