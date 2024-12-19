@@ -36,11 +36,7 @@ function createPlayerMenu(
             { key: "layer", value: "CHARACTER", coordinator: "||" },
             { key: "layer", value: "MOUNT" },
             {
-              key: [
-                "metadata",
-                "com.owlbear-rodeo-bubbles-extension/metadata",
-                "hide",
-              ],
+              key: ["metadata", getPluginId("metadata"), "gmOnly"],
               value: true,
               operator: "!=",
             },
