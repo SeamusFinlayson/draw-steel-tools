@@ -1,6 +1,8 @@
 import { SVGProps } from "react";
 
-export default function MagicIcon(props: SVGProps<SVGSVGElement>): JSX.Element {
+export default function MagicIcon(
+  props: SVGProps<SVGSVGElement>,
+): React.JSX.Element {
   return (
     <svg
       {...props}

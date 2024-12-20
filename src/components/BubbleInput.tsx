@@ -1,6 +1,6 @@
 import PartiallyControlledInput from "./StatInput";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { InputColor } from "@/colorHelpers";
 import { StatMetadataID } from "@/metadataHelpers/itemMetadataIds";
 
@@ -20,8 +20,9 @@ export default function BubbleInput({
   label: string;
   hideLabel?: boolean;
   animateOnlyWhenRootActive?: boolean;
-}): JSX.Element {
+}): React.JSX.Element {
   const [hasFocus, setHasFocus] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const animationDuration75 = animateOnlyWhenRootActive
     ? "group-focus-within/root:duration-75 group-hover/root:duration-75"
@@ -33,11 +34,14 @@ export default function BubbleInput({
   return (
     <div>
       <div
-        className={cn("bg-gradient-to-t", {
+        className={cn("group bg-gradient-to-t", {
           "from-stat-red/10 dark:from-stat-red-dark/10": color === "RED",
           "from-stat-green/10 dark:from-stat-green-dark/10": color === "GREEN",
           "from-stat-blue/10 dark:from-stat-blue-dark/10": color === "BLUE",
         })}
+        onClick={() => {
+          if (inputRef.current) inputRef.current.focus();
+        }}
       >
         <label
           htmlFor={name}
@@ -50,13 +54,14 @@ export default function BubbleInput({
         </label>
 
         <PartiallyControlledInput
+          ref={inputRef}
           id={name}
           name={name}
           onFocus={() => setHasFocus(true)}
           onBlur={() => setHasFocus(false)}
           parentValue={parentValue.toString()}
           onUserConfirm={updateHandler}
-          className={cn("peer w-full bg-transparent outline-none")}
+          className={cn("w-full bg-transparent outline-none")}
         />
         <div
           className={cn(
@@ -67,7 +72,7 @@ export default function BubbleInput({
               "border-stat-green dark:border-stat-green-dark":
                 color === "GREEN",
               "border-stat-blue dark:border-stat-blue-dark": color === "BLUE",
-              "border-b border-text-secondary hover:border-text-primary peer-hover:border-b-2 dark:border-text-secondary-dark dark:peer-hover:border-text-primary-dark":
+              "border-b border-text-secondary hover:border-text-primary group-hover:border-b-2 dark:border-text-secondary-dark dark:peer-hover:border-text-primary-dark":
                 !hasFocus,
             },
           )}

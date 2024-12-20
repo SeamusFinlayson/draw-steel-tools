@@ -29,7 +29,7 @@ import {
 } from "@/metadataHelpers/settingMetadataIds";
 import useSettings from "./useSettings";
 
-export default function Settings(): JSX.Element {
+export default function Settings(): React.JSX.Element {
   const roomSettings = useSettings("ROOM");
   const sceneSettings = useSettings("SCENE");
 
@@ -511,13 +511,13 @@ function SettingsRow({
   children,
   last,
 }: {
-  icon: JSX.Element;
+  icon: React.JSX.Element;
   label: string;
   description: string;
-  action: JSX.Element;
-  children?: JSX.Element | JSX.Element[];
+  action: React.JSX.Element;
+  children?: React.JSX.Element | React.JSX.Element[];
   last?: boolean;
-}): JSX.Element {
+}): React.JSX.Element {
   return (
     <div>
       <div
@@ -549,17 +549,17 @@ function SubSettingsRow({
 }: {
   label: string;
   description?: string;
-  action: JSX.Element;
+  action: React.JSX.Element;
   last?: boolean;
   collapseElement: boolean;
-}): JSX.Element {
+}): React.JSX.Element {
   return (
     <div
-      {...{ inert: collapseElement ? "" : undefined }} // type script react does not recognize inert
       className={cn("overflow-clip transition-max-height duration-300", {
         "max-h-60 ease-in": !collapseElement,
         "max-h-0 ease-out": collapseElement,
       })}
+      inert={collapseElement}
     >
       <div className="pt-0.5">
         <div
@@ -584,7 +584,7 @@ function RemoveSetting({
   removeHandler,
 }: {
   removeHandler: () => void;
-}): JSX.Element {
+}): React.JSX.Element {
   return (
     <div className="pt-0.5">
       <div

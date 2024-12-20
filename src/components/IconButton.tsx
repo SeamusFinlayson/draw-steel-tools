@@ -8,13 +8,13 @@ export default function IconButton({
   danger = false,
   animateOnlyWhenRootActive = false,
 }: {
-  Icon: (props: SVGProps<SVGSVGElement>) => JSX.Element;
+  Icon: (props: SVGProps<SVGSVGElement>) => React.JSX.Element;
   onClick: () => void;
   rounded?: string;
   padding?: string;
   danger?: boolean;
   animateOnlyWhenRootActive?: boolean;
-}): JSX.Element {
+}): React.JSX.Element {
   const animationDuration100 = animateOnlyWhenRootActive
     ? "group-focus-within/root:duration-100 group-hover/root:duration-100"
     : "duration-100";

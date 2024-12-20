@@ -36,10 +36,10 @@ export default function Footer({
   tokens: Token[];
   playerRole: "PLAYER" | "GM";
   playerName: string;
-}): JSX.Element {
+}): React.JSX.Element {
   const [diceMenuOpen, setDiceMenuOpen] = useState(false);
 
-  const getOperationButton = (operation: Operation): JSX.Element => {
+  const getOperationButton = (operation: Operation): React.JSX.Element => {
     switch (operation) {
       case "damage":
         return (
@@ -97,7 +97,7 @@ export default function Footer({
     }
   };
 
-  const rolls: JSX.Element[] = appState.rolls
+  const rolls: React.JSX.Element[] = appState.rolls
     .filter((roll) => {
       if (roll.visibility === "PUBLIC") return true;
       if (roll.visibility === "GM" && playerRole === "GM") return true;

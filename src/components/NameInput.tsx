@@ -8,7 +8,7 @@ export default function NameInput({
   updateHandler: (target: HTMLInputElement) => void;
   inputProps?: InputHTMLAttributes<HTMLInputElement>;
   animateOnlyWhenRootActive?: boolean;
-}): JSX.Element {
+}): React.JSX.Element {
   const animationDuration100 = animateOnlyWhenRootActive
     ? "group-focus-within/root:duration-100 group-hover/root:duration-100"
     : "duration-100";

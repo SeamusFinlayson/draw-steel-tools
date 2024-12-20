@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 import { arrayMove } from "@dnd-kit/sortable";
 import { DragEndEvent } from "@dnd-kit/core";
 
-export default function BulkEditor(): JSX.Element {
+export default function BulkEditor(): React.JSX.Element {
   // App state
   const [appState, dispatch] = useReducer(reducer, {}, (): BulkEditorState => {
     return {
@@ -238,7 +238,7 @@ function ChangeShowItemsButton({
 }: {
   appState: BulkEditorState;
   dispatch: React.Dispatch<Action>;
-}): JSX.Element {
+}): React.JSX.Element {
   return (
     <Button
       variant={"ghost"}

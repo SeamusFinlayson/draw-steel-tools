@@ -73,7 +73,7 @@ export function SetValuesTable({
   playerRole: "PLAYER" | "GM";
   playerSelection: string[];
   handleDragEnd: (event: DragEndEvent) => void;
-}): JSX.Element {
+}): React.JSX.Element {
   const sensors = useSensors(
     useSensor(SmartMouseSensor, {
       activationConstraint: { distance: { y: 10 } },
@@ -218,7 +218,7 @@ function AccessButton({
 }: {
   token: Token;
   setTokens: React.Dispatch<React.SetStateAction<Token[]>>;
-}): JSX.Element {
+}): React.JSX.Element {
   return (
     <TableCell className="py-0">
       <Tooltip>
@@ -262,7 +262,7 @@ export function DamageTable({
   dispatch: React.Dispatch<Action>;
   tokens: Token[];
   playerSelection: string[];
-}): JSX.Element {
+}): React.JSX.Element {
   return (
     <Table>
       <TableHeader>
@@ -440,7 +440,7 @@ function TokenTableCell({
   token: Token;
   faded: boolean;
   playerSelection: string[];
-}): JSX.Element {
+}): React.JSX.Element {
   const image = (
     <img
       className="min-h-8 min-w-8"
@@ -531,7 +531,7 @@ function StatInput({
   parentValue: number;
   updateHandler: (target: HTMLInputElement) => void;
   name: InputName;
-}): JSX.Element {
+}): React.JSX.Element {
   const [value, setValue] = useState<string>(parentValue.toString());
   let ignoreBlur = false;
 
@@ -591,7 +591,7 @@ function CheckboxTableHead({
 }: {
   included: boolean | "indeterminate";
   onCheckedChange: (checked: boolean) => void;
-}): JSX.Element {
+}): React.JSX.Element {
   return (
     <TableCell>
       <Checkbox
@@ -610,7 +610,7 @@ function CheckboxTableCell({
 }: {
   included: boolean;
   onCheckedChange: (checked: boolean) => void;
-}): JSX.Element {
+}): React.JSX.Element {
   return (
     <TableCell>
       <Checkbox

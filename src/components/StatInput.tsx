@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   parentValue: string;
   onUserConfirm: (target: HTMLInputElement) => void;
+  ref?: React.Ref<HTMLInputElement> | undefined;
 }
 
 // Input with on confirm method that encapsulates the logic for stat inputs in the context menu
@@ -10,8 +11,9 @@ export default function PartiallyControlledInput({
   parentValue,
   onUserConfirm,
   className,
+  ref,
   ...inputProps
-}: InputProps): JSX.Element {
+}: InputProps): React.JSX.Element {
   const [inputContent, setInputContent] = useState<string>(parentValue);
 
   // Update inputContent when the value state changes in parent
@@ -49,6 +51,7 @@ export default function PartiallyControlledInput({
   return (
     <input
       {...inputProps}
+      ref={ref}
       value={inputContent}
       onChange={(e) => {
         if (inputProps.onChange) inputProps.onChange(e);

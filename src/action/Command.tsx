@@ -93,7 +93,7 @@ export default function Command({
   dispatch: React.Dispatch<Action>;
   playerRole: "PLAYER" | "GM";
   playerName: string;
-}): JSX.Element {
+}): React.JSX.Element {
   const [inputContent, setInputContent] = useState("");
   const [targetIndex, setTargetIndex] = useState(0);
   const [isActive, setIsActive] = useState<boolean | "from-null" | "initial">(
@@ -107,7 +107,7 @@ export default function Command({
   const indexCodeMap = new Map<number, string>();
   let commandCount = 0;
 
-  let commandItems: JSX.Element[] = [];
+  let commandItems: React.JSX.Element[] = [];
   const commandCode = extractCommandCode(inputContent);
   if (commands.has(commandCode)) {
     const executeCommand = () => {
@@ -349,7 +349,7 @@ function CommandItem({
   onSelectorFocus?: () => void;
   onSelectionConfirm: () => void;
   children: any;
-}): JSX.Element {
+}): React.JSX.Element {
   const divRef = useRef<HTMLDivElement>(null);
 
   const scrollToElement = () => {

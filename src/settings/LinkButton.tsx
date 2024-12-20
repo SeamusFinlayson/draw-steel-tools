@@ -12,10 +12,10 @@ export default function LinkButton({
   size,
 }: {
   name: string;
-  icon: JSX.Element;
+  icon: React.JSX.Element;
   href: string;
   size?: "base" | "large";
-}): JSX.Element {
+}): React.JSX.Element {
   return (
     <Tooltip defaultOpen={false}>
       <TooltipTrigger asChild>

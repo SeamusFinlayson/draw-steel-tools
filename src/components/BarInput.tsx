@@ -23,7 +23,7 @@ export default function BarInput({
   valueName: StatMetadataID;
   maxName: StatMetadataID;
   animateOnlyWhenRootActive?: boolean;
-}): JSX.Element {
+}): React.JSX.Element {
   const [valueHasFocus, setValueHasFocus] = useState(false);
   const [maxHasFocus, setMaxHasFocus] = useState(false);
 

@@ -6,7 +6,7 @@ export default function ActionButton({
 }: {
   label: string;
   buttonProps: React.ButtonHTMLAttributes<HTMLButtonElement>;
-}): JSX.Element {
+}): React.JSX.Element {
   return (
     <Button
       key={label}

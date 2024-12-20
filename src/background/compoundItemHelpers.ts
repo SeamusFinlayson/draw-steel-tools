@@ -146,7 +146,7 @@ export function createHealthBar(
     .build();
 
   const fillPortion = getFillPortion(health, maxHealth, segments);
-  const fillColor = health >= 0 ? "red" : "darkviolet";
+  const fillColor = health >= 0 ? "red" : "red";
 
   const fillShape = buildCurve()
     .fillColor(fillColor)

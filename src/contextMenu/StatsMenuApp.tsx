@@ -38,7 +38,7 @@ export default function StatsMenuApp({
   initialTokenName: string;
   initialNameTagsEnabled: boolean;
   role: "GM" | "PLAYER";
-}): JSX.Element {
+}): React.JSX.Element {
   const [token, setToken] = useState<Token>(initialToken);
 
   useEffect(
@@ -98,7 +98,7 @@ export default function StatsMenuApp({
     }),
   );
 
-  const NameField: JSX.Element = (
+  const NameField: React.JSX.Element = (
     <div className="grid grid-cols-[1fr,auto,1fr] place-items-center">
       <div></div>
       <div className="w-[144px]">
@@ -135,7 +135,7 @@ export default function StatsMenuApp({
     </div>
   );
 
-  const StatsMenu: JSX.Element = (
+  const StatsMenu: React.JSX.Element = (
     <div className="px-1 text-text-primary dark:text-text-primary-dark">
       <div className="flex w-full justify-around gap-2">
         <BubbleInput
@@ -186,12 +186,12 @@ export default function StatsMenuApp({
     </div>
   );
 
-  const HideButton: JSX.Element = (
+  const HideButton: React.JSX.Element = (
     <div className="flex size-full justify-center">
       <Button
         variant={"ghost"}
         className={cn(
-          "flex rounded-full bg-mirage-950/[0.07] text-sm font-normal text-text-primary dark:text-text-primary-dark dark:hover:bg-mirage-50/15",
+          "flex rounded-full text-sm font-normal text-text-primary dark:text-text-primary-dark dark:hover:bg-mirage-50/15",
         )}
         onClick={() => toggleHide()}
       >
@@ -218,61 +218,3 @@ export default function StatsMenuApp({
     </div>
   );
 }
-
-const TextRing = ({
-  topText,
-  bottomText,
-  letterSpacing,
-}: {
-  topText: string;
-  bottomText: string;
-  letterSpacing: number;
-}): JSX.Element => {
-  const fillOpacity = 0;
-  const radius = 29;
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="overflow-visible text-2xs font-medium"
-    >
-      <path
-        id="topCirclePath"
-        d={`
-          M ${(-radius).toString()} 0
-          A ${radius.toString()} ${radius.toString()} 0 0,1 ${radius.toString()},0
-        `}
-        fillOpacity={fillOpacity}
-      />
-      <path
-        id="bottomCirclePath"
-        d={`
-            M ${(-radius).toString()} 0
-            A ${radius.toString()} ${radius.toString()} 0 0,0 ${radius.toString()},0
-          `}
-        fillOpacity={fillOpacity}
-      />
-      <text>
-        <textPath
-          href="#topCirclePath"
-          startOffset="50%"
-          dominantBaseline="central"
-          textAnchor="middle"
-          letterSpacing={letterSpacing}
-        >
-          {topText}
-        </textPath>
-      </text>
-      <text>
-        <textPath
-          href="#bottomCirclePath"
-          startOffset="50%"
-          dominantBaseline="central"
-          textAnchor="middle"
-          letterSpacing={letterSpacing}
-        >
-          {bottomText}
-        </textPath>
-      </text>
-    </svg>
-  );
-};

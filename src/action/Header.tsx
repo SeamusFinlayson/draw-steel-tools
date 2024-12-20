@@ -29,7 +29,7 @@ export default function Header({
   dispatch: React.Dispatch<Action>;
   playerRole: "PLAYER" | "GM";
   playerName: string;
-}): JSX.Element {
+}): React.JSX.Element {
   return (
     <div className="flex gap-2 p-4 pb-2 pt-3">
       <Command
