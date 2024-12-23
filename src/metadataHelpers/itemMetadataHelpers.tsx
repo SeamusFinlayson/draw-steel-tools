@@ -8,6 +8,8 @@ import {
   GM_ONLY_METADATA_ID,
   GROUP_METADATA_ID,
   INDEX_METADATA_ID,
+  SURGES_METADATA_ID,
+  RECOVERIES_METADATA_ID,
 } from "./itemMetadataIds";
 import Token from "./TokenType";
 import {
@@ -43,36 +45,16 @@ export function itemFilter(item: Item) {
 
 export function parseItem(item: Item): Token {
   const metadata = getPluginMetadata(item.metadata);
-  return tokenFactory(
-    item,
-    readNumberFromObject(metadata, STAMINA_METADATA_ID),
-    readNumberFromObject(metadata, STAMINA_MAXIMUM_METADATA_ID),
-    readNumberFromObject(metadata, TEMP_STAMINA_METADATA_ID),
-    readNumberFromObject(metadata, HEROIC_RESOURCE_METADATA_ID),
-    readBooleanFromObject(metadata, GM_ONLY_METADATA_ID),
-    readNumberFromObject(metadata, GROUP_METADATA_ID),
-    readNumberFromObject(metadata, INDEX_METADATA_ID, -1),
-  );
-}
-
-export function tokenFactory(
-  item: Item,
-  health: number,
-  maxHealth: number,
-  tempHealth: number,
-  armorClass: number,
-  hideStats: boolean,
-  group: number,
-  index: number,
-): Token {
   return {
     item,
-    stamina: health,
-    staminaMaximum: maxHealth,
-    temporaryStamina: tempHealth,
-    heroicResource: armorClass,
-    gmOnly: hideStats,
-    group,
-    index,
+    stamina: readNumberFromObject(metadata, STAMINA_METADATA_ID),
+    staminaMaximum: readNumberFromObject(metadata, STAMINA_MAXIMUM_METADATA_ID),
+    temporaryStamina: readNumberFromObject(metadata, TEMP_STAMINA_METADATA_ID),
+    heroicResource: readNumberFromObject(metadata, HEROIC_RESOURCE_METADATA_ID),
+    surges: readNumberFromObject(metadata, SURGES_METADATA_ID),
+    recoveries: readNumberFromObject(metadata, RECOVERIES_METADATA_ID),
+    gmOnly: readBooleanFromObject(metadata, GM_ONLY_METADATA_ID),
+    group: readNumberFromObject(metadata, GROUP_METADATA_ID),
+    index: readNumberFromObject(metadata, INDEX_METADATA_ID, -1),
   };
 }

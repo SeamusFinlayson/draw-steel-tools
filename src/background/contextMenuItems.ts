@@ -3,10 +3,10 @@ import { getPluginId } from "../getPluginId";
 import menuIcon from "@/menuIcon";
 import { Settings } from "@/metadataHelpers/settingMetadataHelpers";
 
-const NAME_HEIGHT = 40;
-const STATS_HEIGHT = 132;
+const NAME_HEIGHT = 44;
+const STATS_HEIGHT = 192;
 const HIDE_HEIGHT = 40;
-const PADDING = 8 + 80;
+const PADDING = 8;
 
 export default async function createContextMenuItems(
   settings: Settings,

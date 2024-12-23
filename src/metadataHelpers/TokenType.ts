@@ -6,6 +6,8 @@ type Token = {
   staminaMaximum: number;
   temporaryStamina: number;
   heroicResource: number;
+  surges: number;
+  recoveries: number;
   gmOnly: boolean;
   group: number;
   index: number;

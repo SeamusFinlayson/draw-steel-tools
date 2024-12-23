@@ -12,8 +12,7 @@ import {
   getSelectedItems,
   parseItems,
 } from "../metadataHelpers/itemMetadataHelpers";
-import Input from "../components/BubbleInput";
-import NameInput from "../components/NameInput";
+import Input from "../components/ContextMenuInput";
 import IconButton from "../components/IconButton";
 import MagicIcon from "../components/MagicIcon";
 import { Button } from "@/components/ui/button";
@@ -26,10 +25,17 @@ import {
   writeNameToSelectedItem,
 } from "@/metadataHelpers/nameHelpers";
 import getGlobalSettings from "@/background/getGlobalSettings";
-import { StatMetadataID } from "@/metadataHelpers/itemMetadataIds";
+import {
+  HEROIC_RESOURCE_METADATA_ID,
+  RECOVERIES_METADATA_ID,
+  STAMINA_MAXIMUM_METADATA_ID,
+  STAMINA_METADATA_ID,
+  StatMetadataID,
+  SURGES_METADATA_ID,
+  TEMP_STAMINA_METADATA_ID,
+} from "@/metadataHelpers/itemMetadataIds";
 import { XIcon } from "@/components/icons/XIcon";
-import PartiallyControlledInput from "@/components/PartiallyControlledInput";
-import { Plus } from "@/components/icons/Plus";
+import Counter from "@/components/Counter";
 
 export default function StatsMenuApp({
   initialToken,
@@ -65,6 +71,12 @@ export default function StatsMenuApp({
 
     const value = getNewStatValue(name, target.value, previousValue);
 
+    setToken((prev) => ({ ...prev, [name]: value }) as Token);
+    writeTokenValueToItem(token.item.id, name, value);
+  }
+
+  function setStatValue(name: string, value: number) {
+    if (!isStatMetadataId(name)) throw "Error: invalid input name.";
     setToken((prev) => ({ ...prev, [name]: value }) as Token);
     writeTokenValueToItem(token.item.id, name, value);
   }
@@ -139,14 +151,12 @@ export default function StatsMenuApp({
     </div>
   );
 
-  const [surgeCount, setSurgeCount] = useState(0);
-
   const StatsMenu: React.JSX.Element = (
     <div className="px-1 text-text-primary dark:text-text-primary-dark">
       <div className="flex w-full justify-around gap-2">
         <Input
           clearContentOnFocus
-          name="stamina"
+          name={STAMINA_METADATA_ID}
           label={"Stamina"}
           color="RED"
           parentValue={token.stamina.toString()}
@@ -159,7 +169,7 @@ export default function StatsMenuApp({
         </div>
         <Input
           clearContentOnFocus
-          name={"staminaMaximum"}
+          name={STAMINA_MAXIMUM_METADATA_ID}
           label={"Stamina Maximum"}
           labelStyle="HIDDEN"
           color="RED"
@@ -174,7 +184,7 @@ export default function StatsMenuApp({
       <div className="grid grid-cols-2 justify-around gap-x-2">
         <Input
           clearContentOnFocus
-          name="temporaryStamina"
+          name={TEMP_STAMINA_METADATA_ID}
           label={"Temporary Stamina"}
           color="GREEN"
           parentValue={token.temporaryStamina.toString()}
@@ -184,15 +194,51 @@ export default function StatsMenuApp({
           }
           animateOnlyWhenRootActive={true}
         />
-        <Input
+        <Counter
           clearContentOnFocus
-          name={"heroicResource"}
+          name={HEROIC_RESOURCE_METADATA_ID}
           label={"Heroic Resource"}
           color="BLUE"
-          parentValue={token.heroicResource.toString()}
+          parentValue={token.heroicResource}
           showParentValue
           updateHandler={(target) =>
             handleStatUpdate(target, token.heroicResource)
+          }
+          incrementHandler={() =>
+            setStatValue(HEROIC_RESOURCE_METADATA_ID, token.heroicResource + 1)
+          }
+          decrementHandler={() =>
+            setStatValue(HEROIC_RESOURCE_METADATA_ID, token.heroicResource - 1)
+          }
+          animateOnlyWhenRootActive={true}
+        />
+        <Counter
+          clearContentOnFocus
+          name={SURGES_METADATA_ID}
+          label={"Surges"}
+          parentValue={token.surges}
+          showParentValue
+          updateHandler={(target) => handleStatUpdate(target, token.surges)}
+          incrementHandler={() =>
+            setStatValue(SURGES_METADATA_ID, token.surges + 1)
+          }
+          decrementHandler={() =>
+            setStatValue(SURGES_METADATA_ID, token.surges - 1)
+          }
+          animateOnlyWhenRootActive={true}
+        />
+        <Counter
+          clearContentOnFocus
+          name={RECOVERIES_METADATA_ID}
+          label={"Recoveries"}
+          parentValue={token.recoveries}
+          showParentValue
+          updateHandler={(target) => handleStatUpdate(target, token.recoveries)}
+          incrementHandler={() =>
+            setStatValue(RECOVERIES_METADATA_ID, token.recoveries + 1)
+          }
+          decrementHandler={() =>
+            setStatValue(RECOVERIES_METADATA_ID, token.recoveries - 1)
           }
           animateOnlyWhenRootActive={true}
         />
