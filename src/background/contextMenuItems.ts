@@ -6,7 +6,7 @@ import { Settings } from "@/metadataHelpers/settingMetadataHelpers";
 const NAME_HEIGHT = 40;
 const STATS_HEIGHT = 132;
 const HIDE_HEIGHT = 40;
-const PADDING = 8;
+const PADDING = 8 + 80;
 
 export default async function createContextMenuItems(
   settings: Settings,

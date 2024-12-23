@@ -4,6 +4,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   parentValue: string;
   onUserConfirm: (target: HTMLInputElement) => void;
   ref?: React.Ref<HTMLInputElement> | undefined;
+  clearContentOnFocus?: boolean;
 }
 
 // Input with on confirm method that encapsulates the logic for stat inputs in the context menu
@@ -12,6 +13,7 @@ export default function PartiallyControlledInput({
   onUserConfirm,
   className,
   ref,
+  clearContentOnFocus = false,
   ...inputProps
 }: InputProps): React.JSX.Element {
   const [inputContent, setInputContent] = useState<string>(parentValue);
@@ -60,7 +62,7 @@ export default function PartiallyControlledInput({
       onBlur={(e) => {
         if (inputProps.onBlur) inputProps.onBlur(e);
         if (!ignoreBlur) {
-          if (inputContent === "") resetInputContent();
+          if (clearContentOnFocus && inputContent === "") resetInputContent();
           else runOnConfirm(e);
         }
       }}
@@ -76,11 +78,11 @@ export default function PartiallyControlledInput({
       }}
       onFocus={(e) => {
         if (inputProps.onFocus) inputProps.onFocus(e);
-        setInputContent("");
+        if (clearContentOnFocus) setInputContent("");
       }}
       className={className}
-      placeholder=""
       autoComplete="off"
+      spellCheck="false"
     />
   );
 }

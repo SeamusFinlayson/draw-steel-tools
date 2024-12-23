@@ -12,7 +12,7 @@ import {
   getSelectedItems,
   parseItems,
 } from "../metadataHelpers/itemMetadataHelpers";
-import BubbleInput from "../components/BubbleInput";
+import Input from "../components/BubbleInput";
 import NameInput from "../components/NameInput";
 import IconButton from "../components/IconButton";
 import MagicIcon from "../components/MagicIcon";
@@ -27,6 +27,9 @@ import {
 } from "@/metadataHelpers/nameHelpers";
 import getGlobalSettings from "@/background/getGlobalSettings";
 import { StatMetadataID } from "@/metadataHelpers/itemMetadataIds";
+import { XIcon } from "@/components/icons/XIcon";
+import PartiallyControlledInput from "@/components/PartiallyControlledInput";
+import { Plus } from "@/components/icons/Plus";
 
 export default function StatsMenuApp({
   initialToken,
@@ -99,84 +102,95 @@ export default function StatsMenuApp({
   );
 
   const NameField: React.JSX.Element = (
-    <div className="grid grid-cols-[1fr,auto,1fr] place-items-center">
-      <div></div>
-      <div className="w-[144px]">
-        <NameInput
-          updateHandler={(target) => {
-            const updateName = target.value.replaceAll(" ", "") !== "";
-            writeNameToSelectedItem(target.value, updateName);
-          }}
-          inputProps={{
-            placeholder: "Name",
-            value: tokenName,
-            onChange: (e) => {
-              setTokenName(e.target.value);
-            },
-          }}
-          animateOnlyWhenRootActive={true}
-        ></NameInput>
-      </div>
-      {tokenName === "" && (
-        <div className="right-0 top-0">
-          <IconButton
-            Icon={MagicIcon}
-            onClick={() => {
+    <div className="flex min-h-10 items-center gap-3 px-1 pb-1">
+      <Input
+        name="Name"
+        label={"Name"}
+        color="WHITE"
+        labelStyle="PLACEHOLDER"
+        parentValue={tokenName}
+        updateHandler={(target) => {
+          const newName = target.value.trim();
+          const updateName = newName !== "";
+          setTokenName(newName);
+          writeNameToSelectedItem(newName, updateName);
+        }}
+        animateOnlyWhenRootActive={true}
+      />
+
+      <div className="right-0 top-0 text-text-primary-dark">
+        <IconButton
+          Icon={tokenName === "" ? MagicIcon : XIcon}
+          onClick={() => {
+            if (tokenName === "")
               getSelectedItemNameProperty().then((name) => {
                 setTokenName(name);
                 writeNameToSelectedItem(name);
               });
-            }}
-            padding=""
-            animateOnlyWhenRootActive={true}
-          ></IconButton>
-        </div>
-      )}
+            else {
+              setTokenName("");
+              writeNameToSelectedItem("");
+            }
+          }}
+          padding=""
+          animateOnlyWhenRootActive={true}
+        ></IconButton>
+      </div>
     </div>
   );
+
+  const [surgeCount, setSurgeCount] = useState(0);
 
   const StatsMenu: React.JSX.Element = (
     <div className="px-1 text-text-primary dark:text-text-primary-dark">
       <div className="flex w-full justify-around gap-2">
-        <BubbleInput
+        <Input
+          clearContentOnFocus
           name="stamina"
           label={"Stamina"}
           color="RED"
-          parentValue={token.stamina}
+          parentValue={token.stamina.toString()}
+          showParentValue
           updateHandler={(target) => handleStatUpdate(target, token.stamina)}
           animateOnlyWhenRootActive={true}
         />
         <div className="flex items-end pb-[18px] text-text-secondary dark:text-text-secondary-dark">
           /
         </div>
-        <BubbleInput
+        <Input
+          clearContentOnFocus
           name={"staminaMaximum"}
           label={"Stamina Maximum"}
-          hideLabel
+          labelStyle="HIDDEN"
           color="RED"
-          parentValue={token.staminaMaximum}
+          parentValue={token.staminaMaximum.toString()}
+          showParentValue
           updateHandler={(target) =>
             handleStatUpdate(target, token.staminaMaximum)
           }
           animateOnlyWhenRootActive={true}
         />
       </div>
-      <div className="flex w-full justify-around gap-2">
-        <BubbleInput
+      <div className="grid grid-cols-2 justify-around gap-x-2">
+        <Input
+          clearContentOnFocus
           name="temporaryStamina"
           label={"Temporary Stamina"}
           color="GREEN"
-          parentValue={token.temporaryStamina}
+          parentValue={token.temporaryStamina.toString()}
+          showParentValue
           updateHandler={(target) =>
             handleStatUpdate(target, token.temporaryStamina)
           }
           animateOnlyWhenRootActive={true}
         />
-        <BubbleInput
+        <Input
+          clearContentOnFocus
           name={"heroicResource"}
           label={"Heroic Resource"}
           color="BLUE"
-          parentValue={token.heroicResource}
+          parentValue={token.heroicResource.toString()}
+          showParentValue
           updateHandler={(target) =>
             handleStatUpdate(target, token.heroicResource)
           }
