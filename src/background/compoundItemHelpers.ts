@@ -13,7 +13,7 @@ import { createRoundedRectangle, getFillPortion } from "./mathHelpers";
 const FONT_SIZE = 22;
 const FONT = "Roboto, sans-serif";
 const LOCKED = true;
-const DISABLE_HIT = true;
+const DISABLE_HIT = false;
 const BACKGROUND_OPACITY = 0.6;
 const DISABLE_ATTACHMENT_BEHAVIORS: AttachmentBehavior[] = [
   "ROTATION",

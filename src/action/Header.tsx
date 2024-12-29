@@ -1,14 +1,3 @@
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import Command from "./Command";
-import { Action, BulkEditorState, Operation } from "./types";
 import { Button } from "@/components/ui/button";
 import { GearIcon } from "@radix-ui/react-icons";
 import OBR from "@owlbear-rodeo/sdk";
@@ -20,23 +9,18 @@ import { History } from "@/components/icons/History";
 import { Bug } from "@/components/icons/bug";
 
 export default function Header({
-  appState,
-  dispatch,
   playerRole,
-  playerName,
 }: {
-  appState: BulkEditorState;
-  dispatch: React.Dispatch<Action>;
   playerRole: "PLAYER" | "GM";
-  playerName: string;
 }): React.JSX.Element {
   return (
-    <div className="flex gap-2 p-4 pb-2 pt-3">
-      <Command
+    <div className="flex items-center gap-2 p-4 pb-2 pt-3">
+      {/* <Command
         dispatch={dispatch}
         playerRole={playerRole}
         playerName={playerName}
-      ></Command>
+      ></Command> */}
+      <h1 className="self w-full">Stat Bubbles</h1>
       {playerRole === "GM" ? (
         <>
           <Button

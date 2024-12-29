@@ -4,11 +4,13 @@ import { useRef, useState } from "react";
 import { InputColor } from "@/colorHelpers";
 import { Plus } from "./icons/Plus";
 import { Minus } from "./icons/Minus";
+import InputUnderline from "./Underline";
+import UnderlineDropDown from "./UnderlineDropDown";
 
 export default function Counter({
   parentValue,
   showParentValue = false,
-  color = "WHITE",
+  color = "DEFAULT",
   updateHandler,
   incrementHandler,
   decrementHandler,
@@ -20,7 +22,7 @@ export default function Counter({
 }: {
   parentValue: number;
   showParentValue?: boolean;
-  color?: InputColor | "WHITE";
+  color?: InputColor | "DEFAULT";
   updateHandler: (target: HTMLInputElement) => void;
   incrementHandler: () => void;
   decrementHandler: () => void;
@@ -33,13 +35,6 @@ export default function Counter({
   const [hasFocus, setHasFocus] = useState(false);
   const [hasHover, setHasHover] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const animationDuration75 = animateOnlyWhenRootActive
-    ? "group-focus-within/root:duration-75 group-hover/root:duration-75"
-    : "duration-75";
-  const animationDuration150 = animateOnlyWhenRootActive
-    ? "group-focus-within/root:duration-150 group-hover/root:duration-150"
-    : "duration-150";
 
   return (
     <div className="pt-0.5 text-text-primary dark:text-text-primary-dark">
@@ -75,7 +70,6 @@ export default function Counter({
             <button className="p-0.5" onClick={decrementHandler}>
               <Minus />
             </button>
-            {/* <div className="border-r border-text-secondary-dark" /> */}
             <PartiallyControlledInput
               ref={inputRef}
               id={name}
@@ -90,50 +84,27 @@ export default function Counter({
               className={cn("w-full bg-transparent text-center outline-none")}
               placeholder={labelStyle === "PLACEHOLDER" ? label : undefined}
             />
-            {/* <div className="border-r border-text-secondary-dark" /> */}
             <button className="p-0.5" onClick={incrementHandler}>
               <Plus />
             </button>
           </div>
 
-          <div
-            className={cn(
-              animationDuration75,
-              "flex min-h-[2px] gap-2 border-b border-text-secondary dark:border-text-secondary-dark",
-              {
-                "border-stat-red dark:border-stat-red-dark":
-                  color === "RED" && hasFocus,
-                "border-stat-green dark:border-stat-green-dark":
-                  color === "GREEN" && hasFocus,
-                "border-stat-blue dark:border-stat-blue-dark":
-                  color === "BLUE" && hasFocus,
-                "border-text-primary dark:border-text-primary-dark":
-                  color === "WHITE" && hasFocus,
-                "border-b-2": hasFocus,
-                "border-b-2 border-text-primary dark:border-text-primary-dark":
-                  hasHover && !hasFocus,
-              },
-            )}
+          <InputUnderline
+            hasFocus={hasFocus}
+            hasHover={hasHover}
+            color={color}
+            animateOnlyWhenRootActive={animateOnlyWhenRootActive}
           />
         </div>
       </div>
       {showParentValue ? (
-        <div
-          className={cn(
-            animationDuration150,
-            "rounded-b-sm px-0.5 text-center text-xs transition-all",
-            { "bg-stat-red-dark/25": color === "RED" },
-            { "bg-stat-green-dark/25": color === "GREEN" },
-            { "bg-stat-blue-dark/25": color === "BLUE" },
-            {
-              "translate-y-0 opacity-100": true,
-              "pointer-events-none -translate-y-2 opacity-0":
-                !hasFocus || parentValue === 0,
-            },
-          )}
-        >
-          {parentValue}
-        </div>
+        <UnderlineDropDown
+          content={parentValue.toString()}
+          hasFocus={hasFocus}
+          color={color}
+          animateOnlyWhenRootActive={animateOnlyWhenRootActive}
+          justification="CENTER"
+        />
       ) : (
         <></>
       )}

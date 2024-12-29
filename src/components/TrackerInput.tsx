@@ -2,11 +2,13 @@ import PartiallyControlledInput from "./PartiallyControlledInput";
 import { cn } from "@/lib/utils";
 import { useRef, useState } from "react";
 import { InputColor } from "@/colorHelpers";
+import InputUnderline from "./Underline";
+import UnderlineDropDown from "./UnderlineDropDown";
 
-export default function Input({
+export default function TrackerInput({
   parentValue,
   showParentValue = false,
-  color = "WHITE",
+  color = "DEFAULT",
   updateHandler,
   name,
   label,
@@ -16,7 +18,7 @@ export default function Input({
 }: {
   parentValue: string;
   showParentValue?: boolean;
-  color?: InputColor | "WHITE";
+  color?: InputColor | "DEFAULT";
   updateHandler: (target: HTMLInputElement) => void;
   name: string;
   label: string;
@@ -25,17 +27,12 @@ export default function Input({
   clearContentOnFocus?: boolean;
 }): React.JSX.Element {
   const [hasFocus, setHasFocus] = useState(false);
+  const [hasHover, setHasHover] = useState(false);
+
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const animationDuration75 = animateOnlyWhenRootActive
-    ? "group-focus-within/root:duration-75 group-hover/root:duration-75"
-    : "duration-75";
-  const animationDuration150 = animateOnlyWhenRootActive
-    ? "group-focus-within/root:duration-150 group-hover/root:duration-150"
-    : "duration-150";
-
   return (
-    <div className="pt-0.5 text-text-primary dark:text-text-primary-dark">
+    <div className="w-full pt-0.5 text-text-primary dark:text-text-primary-dark">
       <div
         className={cn("group bg-gradient-to-t", {
           "from-stat-red/10 dark:from-stat-red-dark/10": color === "RED",
@@ -66,6 +63,8 @@ export default function Input({
               name={name}
               onFocus={() => setHasFocus(true)}
               onBlur={() => setHasFocus(false)}
+              onMouseEnter={() => setHasHover(true)}
+              onMouseLeave={() => setHasHover(false)}
               parentValue={parentValue.toString()}
               onUserConfirm={updateHandler}
               clearContentOnFocus={clearContentOnFocus}
@@ -75,38 +74,20 @@ export default function Input({
           </div>
         </div>
 
-        <div
-          className={cn(
-            animationDuration75,
-            "flex min-h-[2px] gap-2 border-b group-focus-within:border-b-2",
-            {
-              "border-stat-red dark:border-stat-red-dark": color === "RED",
-              "border-stat-green dark:border-stat-green-dark":
-                color === "GREEN",
-              "border-stat-blue dark:border-stat-blue-dark": color === "BLUE",
-              "border-text-secondary group-hover:border-b-2 group-hover:border-text-primary dark:border-text-secondary-dark dark:group-hover:border-text-primary-dark":
-                !hasFocus,
-            },
-          )}
+        <InputUnderline
+          hasFocus={hasFocus}
+          hasHover={hasHover}
+          color={color}
+          animateOnlyWhenRootActive={animateOnlyWhenRootActive}
         />
       </div>
       {showParentValue ? (
-        <div
-          className={cn(
-            animationDuration150,
-            "rounded-b-sm px-0.5 text-xs transition-all",
-            { "bg-stat-red-dark/25": color === "RED" },
-            { "bg-stat-green-dark/25": color === "GREEN" },
-            { "bg-stat-blue-dark/25": color === "BLUE" },
-            {
-              "translate-y-0 opacity-100": true,
-              "pointer-events-none -translate-y-2 opacity-0":
-                !hasFocus || parentValue === "0",
-            },
-          )}
-        >
-          {parentValue}
-        </div>
+        <UnderlineDropDown
+          content={parentValue}
+          hasFocus={hasFocus}
+          color={color}
+          animateOnlyWhenRootActive={animateOnlyWhenRootActive}
+        />
       ) : (
         <></>
       )}

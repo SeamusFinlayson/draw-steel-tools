@@ -12,9 +12,7 @@ import {
   getSelectedItems,
   parseItems,
 } from "../metadataHelpers/itemMetadataHelpers";
-import Input from "../components/ContextMenuInput";
-import IconButton from "../components/IconButton";
-import MagicIcon from "../components/MagicIcon";
+import TrackerInput from "../components/TrackerInput";
 import { Button } from "@/components/ui/button";
 import BookLock from "@/components/icons/BookLock";
 import BookOpen from "@/components/icons/BookOpen";
@@ -34,8 +32,8 @@ import {
   SURGES_METADATA_ID,
   TEMP_STAMINA_METADATA_ID,
 } from "@/metadataHelpers/itemMetadataIds";
-import { XIcon } from "@/components/icons/XIcon";
 import Counter from "@/components/Counter";
+import NameInput from "@/components/NameInput";
 
 export default function StatsMenuApp({
   initialToken,
@@ -115,46 +113,38 @@ export default function StatsMenuApp({
 
   const NameField: React.JSX.Element = (
     <div className="flex min-h-10 items-center gap-3 px-1 pb-1">
-      <Input
+      <NameInput
         name="Name"
         label={"Name"}
-        color="WHITE"
         labelStyle="PLACEHOLDER"
         parentValue={tokenName}
-        updateHandler={(target) => {
+        onActionClick={
+          tokenName === ""
+            ? () =>
+                getSelectedItemNameProperty().then((name) => {
+                  setTokenName(name);
+                  writeNameToSelectedItem(name);
+                })
+            : () => {
+                setTokenName("");
+                writeNameToSelectedItem("");
+              }
+        }
+        updateHandler={(target: HTMLInputElement) => {
           const newName = target.value.trim();
           const updateName = newName !== "";
           setTokenName(newName);
           writeNameToSelectedItem(newName, updateName);
         }}
-        animateOnlyWhenRootActive={true}
+        animateOnlyWhenRootActive
       />
-
-      <div className="right-0 top-0 text-text-primary-dark">
-        <IconButton
-          Icon={tokenName === "" ? MagicIcon : XIcon}
-          onClick={() => {
-            if (tokenName === "")
-              getSelectedItemNameProperty().then((name) => {
-                setTokenName(name);
-                writeNameToSelectedItem(name);
-              });
-            else {
-              setTokenName("");
-              writeNameToSelectedItem("");
-            }
-          }}
-          padding=""
-          animateOnlyWhenRootActive={true}
-        ></IconButton>
-      </div>
     </div>
   );
 
   const StatsMenu: React.JSX.Element = (
     <div className="px-1 text-text-primary dark:text-text-primary-dark">
       <div className="flex w-full justify-around gap-2">
-        <Input
+        <TrackerInput
           clearContentOnFocus
           name={STAMINA_METADATA_ID}
           label={"Stamina"}
@@ -162,12 +152,12 @@ export default function StatsMenuApp({
           parentValue={token.stamina.toString()}
           showParentValue
           updateHandler={(target) => handleStatUpdate(target, token.stamina)}
-          animateOnlyWhenRootActive={true}
+          animateOnlyWhenRootActive
         />
         <div className="flex items-end pb-[18px] text-text-secondary dark:text-text-secondary-dark">
           /
         </div>
-        <Input
+        <TrackerInput
           clearContentOnFocus
           name={STAMINA_MAXIMUM_METADATA_ID}
           label={"Stamina Maximum"}
@@ -178,11 +168,11 @@ export default function StatsMenuApp({
           updateHandler={(target) =>
             handleStatUpdate(target, token.staminaMaximum)
           }
-          animateOnlyWhenRootActive={true}
+          animateOnlyWhenRootActive
         />
       </div>
       <div className="grid grid-cols-2 justify-around gap-x-2">
-        <Input
+        <TrackerInput
           clearContentOnFocus
           name={TEMP_STAMINA_METADATA_ID}
           label={"Temporary Stamina"}
@@ -192,12 +182,13 @@ export default function StatsMenuApp({
           updateHandler={(target) =>
             handleStatUpdate(target, token.temporaryStamina)
           }
-          animateOnlyWhenRootActive={true}
+          animateOnlyWhenRootActive
         />
         <Counter
           clearContentOnFocus
           name={HEROIC_RESOURCE_METADATA_ID}
           label={"Heroic Resource"}
+          labelStyle={token.gmOnly ? "HIDDEN" : "VISIBLE"}
           color="BLUE"
           parentValue={token.heroicResource}
           showParentValue
@@ -210,12 +201,13 @@ export default function StatsMenuApp({
           decrementHandler={() =>
             setStatValue(HEROIC_RESOURCE_METADATA_ID, token.heroicResource - 1)
           }
-          animateOnlyWhenRootActive={true}
+          animateOnlyWhenRootActive
         />
         <Counter
           clearContentOnFocus
           name={SURGES_METADATA_ID}
           label={"Surges"}
+          labelStyle={token.gmOnly ? "HIDDEN" : "VISIBLE"}
           parentValue={token.surges}
           showParentValue
           updateHandler={(target) => handleStatUpdate(target, token.surges)}
@@ -225,12 +217,13 @@ export default function StatsMenuApp({
           decrementHandler={() =>
             setStatValue(SURGES_METADATA_ID, token.surges - 1)
           }
-          animateOnlyWhenRootActive={true}
+          animateOnlyWhenRootActive
         />
         <Counter
           clearContentOnFocus
           name={RECOVERIES_METADATA_ID}
           label={"Recoveries"}
+          labelStyle={token.gmOnly ? "HIDDEN" : "VISIBLE"}
           parentValue={token.recoveries}
           showParentValue
           updateHandler={(target) => handleStatUpdate(target, token.recoveries)}
@@ -240,7 +233,7 @@ export default function StatsMenuApp({
           decrementHandler={() =>
             setStatValue(RECOVERIES_METADATA_ID, token.recoveries - 1)
           }
-          animateOnlyWhenRootActive={true}
+          animateOnlyWhenRootActive
         />
       </div>
     </div>

@@ -50,7 +50,10 @@ export function getNewStatValue(
   return restrictValueRange(id, inlineMath(inputContent, previousValue));
 }
 
-function inlineMath(inputContent: string, previousValue: number): number {
+export function inlineMath(
+  inputContent: string,
+  previousValue: number,
+): number {
   let doInlineMath = true;
   if (inputContent.startsWith("=")) {
     inputContent = inputContent.substring(1).trim();

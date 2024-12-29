@@ -1,15 +1,11 @@
 import OBR from "@owlbear-rodeo/sdk";
 import { createRoot } from "react-dom/client";
-import BulkEditor from "./BulkEditor";
+import App from "./App";
 
 import "../index.css";
 import { addThemeToBody } from "@/colorHelpers";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import {
-  BROADCAST_CHANNEL,
-  TOGGLE_ACTION_OPEN,
-  toggleActionOpen,
-} from "./helpers";
+import { BROADCAST_CHANNEL, DICE_ROLL } from "./helpers";
 import createToolActionShortcut from "./createToolActionShortcut";
 
 OBR.onReady(async () => {
@@ -25,13 +21,12 @@ OBR.onReady(async () => {
       skipDelayDuration={0}
       delayDuration={400}
     >
-      <BulkEditor />
+      <App />
     </TooltipProvider>,
   );
 
   OBR.broadcast.onMessage(BROADCAST_CHANNEL, async (event) => {
-    if (event.data === TOGGLE_ACTION_OPEN) {
-      toggleActionOpen(await OBR.action.isOpen());
+    if (event.data === DICE_ROLL) {
     }
   });
 
@@ -39,7 +34,6 @@ OBR.onReady(async () => {
     if (e.code === "KeyS" && e.shiftKey) {
       e.stopPropagation();
       e.preventDefault();
-      toggleActionOpen(await OBR.action.isOpen());
     }
   };
   document.addEventListener("keydown", toggleClosed);

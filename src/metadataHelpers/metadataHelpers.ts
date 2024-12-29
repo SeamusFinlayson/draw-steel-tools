@@ -1,8 +1,8 @@
 import { getPluginId } from "@/getPluginId";
 import { Metadata } from "@owlbear-rodeo/sdk";
 
-export function getPluginMetadata(itemMetadata: Metadata, pluginId?: string) {
-  const pluginMetadata = itemMetadata[
+export function getPluginMetadata(metadata: Metadata, pluginId?: string) {
+  const pluginMetadata = metadata[
     pluginId ? pluginId : getPluginId("metadata")
   ] as Record<string, unknown>;
   return pluginMetadata;

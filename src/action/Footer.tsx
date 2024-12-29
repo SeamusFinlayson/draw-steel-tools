@@ -1,4 +1,4 @@
-import { Action, BulkEditorState, Operation } from "./types";
+import { Action, ActionAppState } from "./types";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -9,10 +9,6 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { calculateScaledHealthDiff } from "./healthCalculations";
 import { useEffect, useState } from "react";
 import DiceSVG from "./DiceSVG";
-import StatStyledInput from "./StatStyledInput";
-import ActionButton from "./ActionButton";
-import { applyHealthDiffToItems, overwriteStats } from "./helpers";
-import Token from "@/metadataHelpers/TokenType";
 import { Separator } from "@/components/ui/separator";
 import OBR from "@owlbear-rodeo/sdk";
 import { Check } from "@/components/icons/Check";
@@ -27,75 +23,15 @@ import {
 export default function Footer({
   appState,
   dispatch,
-  tokens,
   playerRole,
   playerName,
 }: {
-  appState: BulkEditorState;
+  appState: ActionAppState;
   dispatch: React.Dispatch<Action>;
-  tokens: Token[];
   playerRole: "PLAYER" | "GM";
   playerName: string;
 }): React.JSX.Element {
   const [diceMenuOpen, setDiceMenuOpen] = useState(false);
-
-  const getOperationButton = (operation: Operation): React.JSX.Element => {
-    switch (operation) {
-      case "damage":
-        return (
-          <ActionButton
-            label={"Apply Damage"}
-            buttonProps={{
-              onClick: () => {
-                applyHealthDiffToItems(
-                  appState.value ? -1 * appState.value : 0,
-                  appState.includedItems,
-                  appState.damageScaleOptions,
-                  tokens,
-                );
-                dispatch({ type: "set-operation", operation: "none" });
-              },
-            }}
-          ></ActionButton>
-        );
-      case "healing":
-        return (
-          <ActionButton
-            label={"Apply Healing"}
-            buttonProps={{
-              onClick: () => {
-                applyHealthDiffToItems(
-                  appState.value ? appState.value : 0,
-                  appState.includedItems,
-                  appState.damageScaleOptions,
-                  tokens,
-                );
-                dispatch({ type: "set-operation", operation: "none" });
-              },
-            }}
-          ></ActionButton>
-        );
-      case "overwrite":
-        return (
-          <ActionButton
-            label={"Overwrite"}
-            buttonProps={{
-              onClick: () => {
-                overwriteStats(
-                  appState.statOverwrites,
-                  appState.includedItems,
-                  tokens,
-                );
-                dispatch({ type: "clear-stat-overwrites" });
-                dispatch({ type: "set-operation", operation: "none" });
-              },
-            }}
-          ></ActionButton>
-        );
-      default:
-        return <></>;
-    }
-  };
 
   const rolls: React.JSX.Element[] = appState.rolls
     .filter((roll) => {
@@ -207,20 +143,7 @@ export default function Footer({
       );
     });
 
-  let valueDisplayString = "Make a roll";
-  if (appState.value !== null)
-    switch (appState.operation) {
-      case "none":
-      case "overwrite":
-        valueDisplayString = `Roll Result`;
-        break;
-      case "damage":
-        valueDisplayString = `Damage Result`;
-        break;
-      case "healing":
-        valueDisplayString = `Healing Result`;
-        break;
-    }
+  let valueDisplayString = "Most recent roll";
 
   const POPOVER_TOP_MARGIN = 60;
   const [popoverHeight, setPopoverHeight] = useState(
@@ -235,82 +158,6 @@ export default function Footer({
 
   return (
     <div className="space-y-2 p-2 px-4">
-      {appState.operation === "overwrite" && (
-        <div className="grid grid-cols-2 items-center justify-items-stretch gap-2 border-mirage-300 dark:border-mirage-800 sm:grid-cols-4">
-          <StatStyledInput
-            name="health"
-            inputProps={{
-              value: appState.statOverwrites.hitPoints,
-              onChange: (e) =>
-                dispatch({
-                  type: "set-hit-points-overwrite",
-                  hitPointsOverwrite: e.target.value,
-                }),
-              onBlur: (e) =>
-                dispatch({
-                  type: "set-hit-points-overwrite",
-                  hitPointsOverwrite: toValidIntString(e.target.value),
-                }),
-              className: "min-w-[90px] w-full h-[36px]",
-              placeholder: "Unchanged",
-            }}
-          />
-          <StatStyledInput
-            name="maxHealth"
-            inputProps={{
-              value: appState.statOverwrites.maxHitPoints,
-              onChange: (e) =>
-                dispatch({
-                  type: "set-max-hit-points-overwrite",
-                  maxHitPointsOverwrite: e.target.value,
-                }),
-              onBlur: (e) =>
-                dispatch({
-                  type: "set-max-hit-points-overwrite",
-                  maxHitPointsOverwrite: toValidIntString(e.target.value),
-                }),
-              className: "min-w-[90px] w-full h-[36px]",
-              placeholder: "Unchanged",
-            }}
-          />
-          <StatStyledInput
-            name="tempHealth"
-            inputProps={{
-              value: appState.statOverwrites.tempHitPoints,
-              onChange: (e) =>
-                dispatch({
-                  type: "set-temp-hit-points-overwrite",
-                  tempHitPointsOverwrite: e.target.value,
-                }),
-              onBlur: (e) =>
-                dispatch({
-                  type: "set-temp-hit-points-overwrite",
-                  tempHitPointsOverwrite: toValidIntString(e.target.value),
-                }),
-              className: "min-w-[90px] w-full h-[36px]",
-              placeholder: "Unchanged",
-            }}
-          />
-          <StatStyledInput
-            name="armorClass"
-            inputProps={{
-              value: appState.statOverwrites.armorClass,
-              onChange: (e) =>
-                dispatch({
-                  type: "set-armor-class-overwrite",
-                  armorClassOverwrite: e.target.value,
-                }),
-              onBlur: (e) =>
-                dispatch({
-                  type: "set-armor-class-overwrite",
-                  armorClassOverwrite: toValidIntString(e.target.value),
-                }),
-              className: "min-w-[90px] w-full h-[36px]",
-              placeholder: "Unchanged",
-            }}
-          />
-        </div>
-      )}
       <div className="flex flex-wrap gap-2">
         <Popover open={diceMenuOpen} onOpenChange={setDiceMenuOpen}>
           <PopoverTrigger asChild>
@@ -359,18 +206,7 @@ export default function Footer({
             {valueDisplayString}
           </div>
         </div>
-        {appState.operation !== "none" && (
-          <div className="ml-auto w-full md:w-fit">
-            {getOperationButton(appState.operation)}
-          </div>
-        )}
       </div>
     </div>
   );
 }
-
-const toValidIntString = (value: string): string => {
-  const valueNum = Math.trunc(parseFloat(value));
-  if (Number.isNaN(valueNum)) return "";
-  return valueNum.toString();
-};

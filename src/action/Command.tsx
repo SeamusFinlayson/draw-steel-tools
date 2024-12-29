@@ -160,27 +160,6 @@ export default function Command({
           }
           break;
         }
-        case "d": {
-          const diceExpression = getDiceExpression();
-          if (diceExpression) {
-            addToRolls(diceExpression, "GM");
-            dispatch({ type: "set-operation", operation: "damage" });
-          }
-          break;
-        }
-        case "h": {
-          const diceExpression = getDiceExpression();
-          if (diceExpression) {
-            addToRolls(diceExpression, "GM");
-            dispatch({ type: "set-operation", operation: "healing" });
-          }
-          break;
-        }
-        case "o": {
-          dispatch({ type: "set-operation", operation: "overwrite" });
-
-          break;
-        }
         default:
           console.log("unhandled command");
       }
