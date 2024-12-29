@@ -27,7 +27,6 @@ export async function getTrackersFromScene(sceneMetadata?: Metadata) {
     sceneMetadata = await OBR.scene.getMetadata();
 
   const metadata = getPluginMetadata(sceneMetadata, TRACKER_METADATA_ID);
-  console.log(metadata);
 
   return {
     malice: readNumberFromObject(metadata, "malice"),

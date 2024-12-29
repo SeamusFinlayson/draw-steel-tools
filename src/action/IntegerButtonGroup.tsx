@@ -32,7 +32,10 @@ export default function IntegerButtonGroup({
     );
     if (i < endValue)
       PhaseButtons.push(
-        <div className="border-r border-text-secondary dark:border-white/20" />,
+        <div
+          key={"divider" + i}
+          className="border-r border-text-secondary dark:border-white/20"
+        />,
       );
   }
 
