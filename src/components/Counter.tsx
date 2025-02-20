@@ -42,7 +42,8 @@ export default function Counter({
         className={cn("bg-gradient-to-t", {
           "from-stat-red/10 dark:from-stat-red-dark/10": color === "RED",
           "from-stat-green/10 dark:from-stat-green-dark/10": color === "GREEN",
-          "from-stat-blue/10 dark:from-stat-blue-dark/10": color === "BLUE",
+          "from-stat-blue/10 dark:from-stat-blue-dark/20": color === "BLUE",
+          "from-amber-400/10 dark:from-amber-600/20": color === "GOLD",
         })}
         onClick={() => {
           if (inputRef.current) inputRef.current.focus();

@@ -35,9 +35,10 @@ export default function TrackerInput({
     <div className="w-full pt-0.5 text-text-primary dark:text-text-primary-dark">
       <div
         className={cn("group bg-gradient-to-t", {
-          "from-stat-red/10 dark:from-stat-red-dark/10": color === "RED",
-          "from-stat-green/10 dark:from-stat-green-dark/10": color === "GREEN",
-          "from-stat-blue/10 dark:from-stat-blue-dark/10": color === "BLUE",
+          "from-stat-red/20 dark:from-stat-red-dark/20": color === "RED",
+          "from-stat-green/20 dark:from-stat-green-dark/20": color === "GREEN",
+          "from-stat-blue/20 dark:from-stat-blue-dark/20": color === "BLUE",
+          "from-amber-400/20 dark:from-amber-600/20": color === "GOLD",
         })}
         onClick={() => {
           if (inputRef.current) inputRef.current.focus();

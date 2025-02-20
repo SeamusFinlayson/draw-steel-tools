@@ -11,5 +11,6 @@ type Token = {
   gmOnly: boolean;
   group: number;
   index: number;
+  type: "HERO" | "MONSTER" | "UNSET";
 };
 export default Token;

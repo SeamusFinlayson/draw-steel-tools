@@ -7,4 +7,4 @@ export function addThemeToBody(themeMode?: "DARK" | "LIGHT") {
   else document.body.classList.remove("dark");
 }
 
-export type InputColor = "RED" | "GREEN" | "BLUE";
+export type InputColor = "RED" | "GREEN" | "BLUE" | "GOLD";

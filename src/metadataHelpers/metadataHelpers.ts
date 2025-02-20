@@ -29,6 +29,17 @@ export function readNumberFromObject(
   return value;
 }
 
+export function readStringFromObject(
+  object: unknown,
+  key: string,
+  fallback: string = "",
+): string {
+  const value = safeObjectRead(object, key);
+  if (typeof value !== "string") return fallback;
+  if (Number.isNaN(value)) return fallback;
+  return value;
+}
+
 export function safeObjectRead(object: unknown, key: string): unknown {
   try {
     const value = (object as Record<string, unknown>)[key];

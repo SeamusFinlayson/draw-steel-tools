@@ -13,13 +13,6 @@ export function isStatMetadataId(id: string): id is StatMetadataID {
   return statMetadataIDs.includes(id as StatMetadataID);
 }
 
-export type InputName =
-  | "health"
-  | "maxHealth"
-  | "tempHealth"
-  | "armorClass"
-  | "hideStats";
-
 export async function writeTokenValueToItem(
   itemId: string,
   id: StatMetadataID,

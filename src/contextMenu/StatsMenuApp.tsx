@@ -184,57 +184,72 @@ export default function StatsMenuApp({
           }
           animateOnlyWhenRootActive
         />
-        <Counter
-          clearContentOnFocus
-          name={HEROIC_RESOURCE_METADATA_ID}
-          label={"Heroic Resource"}
-          labelStyle={token.gmOnly ? "HIDDEN" : "VISIBLE"}
-          color="BLUE"
-          parentValue={token.heroicResource}
-          showParentValue
-          updateHandler={(target) =>
-            handleStatUpdate(target, token.heroicResource)
-          }
-          incrementHandler={() =>
-            setStatValue(HEROIC_RESOURCE_METADATA_ID, token.heroicResource + 1)
-          }
-          decrementHandler={() =>
-            setStatValue(HEROIC_RESOURCE_METADATA_ID, token.heroicResource - 1)
-          }
-          animateOnlyWhenRootActive
-        />
-        <Counter
-          clearContentOnFocus
-          name={SURGES_METADATA_ID}
-          label={"Surges"}
-          labelStyle={token.gmOnly ? "HIDDEN" : "VISIBLE"}
-          parentValue={token.surges}
-          showParentValue
-          updateHandler={(target) => handleStatUpdate(target, token.surges)}
-          incrementHandler={() =>
-            setStatValue(SURGES_METADATA_ID, token.surges + 1)
-          }
-          decrementHandler={() =>
-            setStatValue(SURGES_METADATA_ID, token.surges - 1)
-          }
-          animateOnlyWhenRootActive
-        />
-        <Counter
-          clearContentOnFocus
-          name={RECOVERIES_METADATA_ID}
-          label={"Recoveries"}
-          labelStyle={token.gmOnly ? "HIDDEN" : "VISIBLE"}
-          parentValue={token.recoveries}
-          showParentValue
-          updateHandler={(target) => handleStatUpdate(target, token.recoveries)}
-          incrementHandler={() =>
-            setStatValue(RECOVERIES_METADATA_ID, token.recoveries + 1)
-          }
-          decrementHandler={() =>
-            setStatValue(RECOVERIES_METADATA_ID, token.recoveries - 1)
-          }
-          animateOnlyWhenRootActive
-        />
+        {token.type !== "MONSTER" && (
+          <Counter
+            clearContentOnFocus
+            name={HEROIC_RESOURCE_METADATA_ID}
+            label={"Heroic Resource"}
+            labelStyle={token.gmOnly ? "HIDDEN" : "VISIBLE"}
+            color="BLUE"
+            parentValue={token.heroicResource}
+            showParentValue
+            updateHandler={(target) =>
+              handleStatUpdate(target, token.heroicResource)
+            }
+            incrementHandler={() =>
+              setStatValue(
+                HEROIC_RESOURCE_METADATA_ID,
+                token.heroicResource + 1,
+              )
+            }
+            decrementHandler={() =>
+              setStatValue(
+                HEROIC_RESOURCE_METADATA_ID,
+                token.heroicResource - 1,
+              )
+            }
+            animateOnlyWhenRootActive
+          />
+        )}
+        {token.type !== "MONSTER" && (
+          <Counter
+            clearContentOnFocus
+            name={SURGES_METADATA_ID}
+            label={"Surges"}
+            color="GOLD"
+            labelStyle={token.gmOnly ? "HIDDEN" : "VISIBLE"}
+            parentValue={token.surges}
+            showParentValue
+            updateHandler={(target) => handleStatUpdate(target, token.surges)}
+            incrementHandler={() =>
+              setStatValue(SURGES_METADATA_ID, token.surges + 1)
+            }
+            decrementHandler={() =>
+              setStatValue(SURGES_METADATA_ID, token.surges - 1)
+            }
+            animateOnlyWhenRootActive
+          />
+        )}
+        {token.type !== "MONSTER" && (
+          <Counter
+            clearContentOnFocus
+            name={RECOVERIES_METADATA_ID}
+            label={"Recoveries"}
+            labelStyle={token.gmOnly ? "HIDDEN" : "VISIBLE"}
+            parentValue={token.recoveries}
+            showParentValue
+            updateHandler={(target) =>
+              handleStatUpdate(target, token.recoveries)
+            }
+            incrementHandler={() =>
+              setStatValue(RECOVERIES_METADATA_ID, token.recoveries + 1)
+            }
+            decrementHandler={() =>
+              setStatValue(RECOVERIES_METADATA_ID, token.recoveries - 1)
+            }
+            animateOnlyWhenRootActive
+          />
+        )}
       </div>
     </div>
   );

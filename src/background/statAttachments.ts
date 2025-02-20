@@ -4,8 +4,6 @@ import {
   DIAMETER,
   FULL_BAR_HEIGHT,
   SHORT_BAR_HEIGHT,
-  acBackgroundId,
-  acTextId,
   addArmorAttachmentsToArray,
   addHealthAttachmentsToArray,
   addNameTagAttachmentsToArray,
@@ -14,8 +12,6 @@ import {
   createNameTag,
   createStatBubble,
   hpTextId,
-  thpBackgroundId,
-  thpTextId,
 } from "./compoundItemHelpers";
 import { getOriginAndBounds } from "./mathHelpers";
 import { parseItem } from "../metadataHelpers/itemMetadataHelpers";
@@ -235,16 +231,60 @@ function createAttachments(item: Image, role: "PLAYER" | "GM", dpi: number) {
   if (role === "PLAYER" && token.gmOnly && !settings.showBars) {
     // Display nothing, explicitly remove all attachments
     addHealthAttachmentsToArray(deleteItemsArray, item.id);
-    addArmorAttachmentsToArray(deleteItemsArray, item.id);
-    addTempHealthAttachmentsToArray(deleteItemsArray, item.id);
+    for (let i = 0; i < 3; i++) {
+      deleteItemsArray.push(`${item.id}-${i}-bg`, `${item.id}-${i}-text`);
+    }
   } else if (role === "PLAYER" && token.gmOnly && settings.showBars) {
     // Display limited stats depending on GM configuration
     createLimitedHealthBar();
   } else {
     // Display full stats
     const hasHealthBar = createFullHealthBar();
-    const hasArmorClassBubble = createArmorClass(hasHealthBar);
-    createTempHealth(hasHealthBar, hasArmorClassBubble);
+
+    const MARGIN = 2;
+    const bubblePosition = {
+      x: origin.x + bounds.width / 2 - DIAMETER / 2 - MARGIN,
+      y: origin.y - DIAMETER / 2 - 2 * MARGIN,
+    };
+    if (hasHealthBar) bubblePosition.y -= FULL_BAR_HEIGHT;
+    if (settings.barAtTop) bubblePosition.y = origin.y + DIAMETER / 2;
+
+    const stats: { color: string; value: number; showBubble: boolean }[] = [
+      {
+        color: "darkgoldenrod",
+        value: token.surges,
+        showBubble: token.surges > 0,
+      },
+      {
+        color: "cornflowerblue",
+        value: token.heroicResource,
+        showBubble: token.heroicResource !== 0,
+      },
+      {
+        color: "olivedrab",
+        value: token.temporaryStamina,
+        showBubble: token.temporaryStamina > 0,
+      },
+    ];
+
+    for (let i = 0; i < stats.length; i++) {
+      if (stats[i].showBubble) {
+        addItemsArray.push(
+          ...createStatBubble(
+            item,
+            stats[i].value,
+            stats[i].color,
+            bubblePosition,
+            `${item.id}-${i}-bg`,
+            `${item.id}-${i}-text`,
+          ),
+        );
+
+        bubblePosition.x -= DIAMETER + MARGIN;
+      } else {
+        deleteItemsArray.push(`${item.id}-${i}-bg`, `${item.id}-${i}-text`);
+      }
+    }
   }
 
   // Create name tag
@@ -329,76 +369,6 @@ function createAttachments(item: Image, role: "PLAYER" | "GM", dpi: number) {
       ),
     );
     return true;
-  }
-
-  /**
-   * Create the armor class bubble.
-   * @returns True if armor class bubble was created.
-   */
-  function createArmorClass(hasHealthBar: boolean) {
-    // return early if armor class bubble shouldn't be created
-    if (token.heroicResource <= 0) {
-      addArmorAttachmentsToArray(deleteItemsArray, item.id);
-      return false;
-    }
-
-    const armorPosition = {
-      x: origin.x + bounds.width / 2 - DIAMETER / 2 - 2,
-      y: origin.y - DIAMETER / 2 - 4 - (hasHealthBar ? FULL_BAR_HEIGHT : 0),
-    };
-    if (settings.barAtTop) {
-      armorPosition.y = origin.y + DIAMETER / 2;
-    }
-
-    addItemsArray.push(
-      ...createStatBubble(
-        item,
-        token.heroicResource,
-        "cornflowerblue", //"#5c8fdb"
-        armorPosition,
-        acBackgroundId(item.id),
-        acTextId(item.id),
-      ),
-    );
-
-    return true;
-  }
-
-  /**
-   * Create the temp hp bubble.
-   */
-  function createTempHealth(
-    hasHealthBar: boolean,
-    hasArmorClassBubble: boolean,
-  ) {
-    // return early if temp health bubble shouldn't be created
-    if (token.temporaryStamina <= 0) {
-      addTempHealthAttachmentsToArray(deleteItemsArray, item.id);
-      return;
-    }
-
-    const tempHealthPosition = {
-      x:
-        origin.x +
-        bounds.width / 2 -
-        DIAMETER * (hasArmorClassBubble ? 1.5 : 0.5) -
-        4,
-      y: origin.y - DIAMETER / 2 - 4 - (hasHealthBar ? FULL_BAR_HEIGHT : 0),
-    };
-    if (settings.barAtTop) {
-      tempHealthPosition.y = origin.y + DIAMETER / 2;
-    }
-
-    addItemsArray.push(
-      ...createStatBubble(
-        item,
-        token.temporaryStamina,
-        "olivedrab",
-        tempHealthPosition,
-        thpBackgroundId(item.id),
-        thpTextId(item.id),
-      ),
-    );
   }
 }
 

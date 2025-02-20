@@ -10,12 +10,14 @@ import {
   INDEX_METADATA_ID,
   SURGES_METADATA_ID,
   RECOVERIES_METADATA_ID,
+  TYPE_METADATA_ID,
 } from "./itemMetadataIds";
 import Token from "./TokenType";
 import {
   getPluginMetadata,
   readBooleanFromObject,
   readNumberFromObject,
+  readStringFromObject,
 } from "./metadataHelpers";
 
 // parse stats
@@ -56,5 +58,9 @@ export function parseItem(item: Item): Token {
     gmOnly: readBooleanFromObject(metadata, GM_ONLY_METADATA_ID),
     group: readNumberFromObject(metadata, GROUP_METADATA_ID),
     index: readNumberFromObject(metadata, INDEX_METADATA_ID, -1),
+    type: readStringFromObject(metadata, TYPE_METADATA_ID, "UNSET") as
+      | "HERO"
+      | "MONSTER"
+      | "UNSET",
   };
 }

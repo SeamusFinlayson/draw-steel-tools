@@ -13,7 +13,7 @@ import { createRoundedRectangle, getFillPortion } from "./mathHelpers";
 const FONT_SIZE = 22;
 const FONT = "Roboto, sans-serif";
 const LOCKED = true;
-const DISABLE_HIT = false;
+const DISABLE_HIT = true;
 const BACKGROUND_OPACITY = 0.6;
 const DISABLE_ATTACHMENT_BEHAVIORS: AttachmentBehavior[] = [
   "ROTATION",
@@ -254,6 +254,10 @@ export const acBackgroundId = (itemId: string) => `${itemId}-ac-background`;
 export const thpTextId = (itemId: string) => `${itemId}-temp-hp-text`;
 export const thpBackgroundId = (itemId: string) =>
   `${itemId}-temp-hp-background`;
+
+export const surgesTextId = (itemId: string) => `${itemId}-surges-text`;
+export const surgesBackgroundId = (itemId: string) =>
+  `${itemId}-surges-background`;
 
 // Item Id utilities
 export function addAllExtensionAttachmentsToArray(

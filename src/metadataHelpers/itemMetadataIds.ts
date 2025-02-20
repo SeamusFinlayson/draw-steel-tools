@@ -5,7 +5,8 @@ export type StatMetadataID =
   | "heroicResource"
   | "recoveries"
   | "surges"
-  | "gmOnly";
+  | "gmOnly"
+  | "type";
 
 export const STAMINA_METADATA_ID: StatMetadataID = "stamina";
 export const STAMINA_MAXIMUM_METADATA_ID: StatMetadataID = "staminaMaximum";
@@ -14,6 +15,7 @@ export const HEROIC_RESOURCE_METADATA_ID: StatMetadataID = "heroicResource";
 export const RECOVERIES_METADATA_ID: StatMetadataID = "recoveries";
 export const SURGES_METADATA_ID: StatMetadataID = "surges";
 export const GM_ONLY_METADATA_ID: StatMetadataID = "gmOnly";
+export const TYPE_METADATA_ID: StatMetadataID = "type";
 
 export const statMetadataIDs: StatMetadataID[] = [
   STAMINA_METADATA_ID,
@@ -23,6 +25,7 @@ export const statMetadataIDs: StatMetadataID[] = [
   RECOVERIES_METADATA_ID,
   SURGES_METADATA_ID,
   GM_ONLY_METADATA_ID,
+  TYPE_METADATA_ID,
 ];
 
 export type TokenSortingMetadataID = "group" | "index";
