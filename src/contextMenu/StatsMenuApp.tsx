@@ -189,7 +189,7 @@ export default function StatsMenuApp({
             clearContentOnFocus
             name={HEROIC_RESOURCE_METADATA_ID}
             label={"Heroic Resource"}
-            labelStyle={token.gmOnly ? "HIDDEN" : "VISIBLE"}
+            labelStyle={"VISIBLE"}
             color="BLUE"
             parentValue={token.heroicResource}
             showParentValue
@@ -217,7 +217,7 @@ export default function StatsMenuApp({
             name={SURGES_METADATA_ID}
             label={"Surges"}
             color="GOLD"
-            labelStyle={token.gmOnly ? "HIDDEN" : "VISIBLE"}
+            labelStyle={"VISIBLE"}
             parentValue={token.surges}
             showParentValue
             updateHandler={(target) => handleStatUpdate(target, token.surges)}
@@ -235,7 +235,7 @@ export default function StatsMenuApp({
             clearContentOnFocus
             name={RECOVERIES_METADATA_ID}
             label={"Recoveries"}
-            labelStyle={token.gmOnly ? "HIDDEN" : "VISIBLE"}
+            labelStyle={"VISIBLE"}
             parentValue={token.recoveries}
             showParentValue
             updateHandler={(target) =>
