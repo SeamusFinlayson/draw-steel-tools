@@ -53,19 +53,16 @@ export default function Settings(): React.JSX.Element {
             <div className="flex gap-2 pr-0.5">
               <LinkButton
                 name="Patreon"
-                size="large"
                 icon={<Patreon />}
                 href={"https://www.patreon.com/SeamusFinlayson"}
               />
               <LinkButton
                 name="Change Log"
-                size="large"
                 icon={<History />}
                 href={"https://www.patreon.com/collection/306916?view=expanded"}
               />
               <LinkButton
                 name="Instructions"
-                size="large"
                 icon={<QuestionMark />}
                 href={
                   "https://github.com/SeamusFinlayson/Bubbles-for-Owlbear-Rodeo?tab=readme-ov-file#how-it-works"
@@ -73,7 +70,6 @@ export default function Settings(): React.JSX.Element {
               />
               <LinkButton
                 name="Report Bug"
-                size="large"
                 icon={<Bug />}
                 href="https://discord.gg/WMp9bky4be"
               />

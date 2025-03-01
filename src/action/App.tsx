@@ -1,15 +1,34 @@
 import "../index.css";
 import { useEffect, useState } from "react";
 import { Trackers } from "./types";
-import Header from "./Header";
 import { getTrackersFromScene, writeTrackersToScene } from "./helpers";
-import OBR from "@owlbear-rodeo/sdk";
+import OBR, { Metadata } from "@owlbear-rodeo/sdk";
 import { addThemeToBody } from "@/colorHelpers";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { inlineMath } from "@/statInputHelpers";
 import TrackerInput from "@/components/TrackerInput";
 import { Button } from "@/components/ui/button";
 import IntegerButtonGroup from "./IntegerButtonGroup";
+import {
+  CheckForDiceExtensions,
+  DiceExtensionResponse,
+  DieStyle,
+  RollRequest,
+  RollResult,
+} from "@/diceProtocol";
+import DiceStylePicker from "./DiceStylePicker";
+import { PlugZap, Settings2, UnplugIcon } from "lucide-react";
+
+import { getPluginId } from "@/getPluginId";
+import MoreDropDown from "./MoreDropDown";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+const HELLO_DICE_ROLLER_CHANNEL = "drawSteelStatBubble.dice.hello";
+const ROLL_RESULT_CHANNEL = "drawSteelStatBubble.dice.replyChannel";
 
 export default function App(): React.JSX.Element {
   const [trackers, setTrackers] = useState<Trackers>({
@@ -25,11 +44,18 @@ export default function App(): React.JSX.Element {
   // Handle scene ready
   useEffect(() => {
     const handleReady = (ready: boolean) => {
-      // setSceneReady(ready);
       if (ready) getTrackersFromScene().then((value) => setTrackers(value));
     };
     OBR.scene.isReady().then(handleReady);
     return OBR.scene.onReadyChange(handleReady);
+  }, []);
+
+  // Handle Scene Metadata Changes
+  useEffect(() => {
+    const handleMetadataChange = (metadata: Metadata) => {
+      getTrackersFromScene(metadata).then((value) => setTrackers(value));
+    };
+    return OBR.scene.onMetadataChange(handleMetadataChange);
   }, []);
 
   // Sync player
@@ -82,14 +108,127 @@ export default function App(): React.JSX.Element {
     rolls: [0, 0],
   });
 
+  // External dice roller messaging
+  const [diceRequestChannel, setDiceRequestChannel] = useState<string>();
+  const [dieStyles, setDieStyles] = useState<DieStyle[]>();
+  const [currentDieStyle, setCurrentDieStyle] = useState<DieStyle>();
+
+  useEffect(
+    () =>
+      OBR.broadcast.onMessage(HELLO_DICE_ROLLER_CHANNEL, (event) => {
+        const data = event.data as DiceExtensionResponse;
+        if (!data.dieTypes.includes("D10")) {
+          console.error(
+            "Error D10 is not supported by the requested dice roller",
+          );
+          return;
+        }
+        if (data.structuredFeatures === undefined) {
+          console.error(
+            "Error structured dice requests are not supported by the dice roller",
+          );
+          return;
+        }
+        if (data.styles) setDieStyles(data.styles);
+        setDiceRequestChannel(data.requestChannel);
+      }),
+    [],
+  );
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (diceRequestChannel === undefined) connectToDiceExtension();
+    }, 2000);
+  }, []);
+
+  useEffect(
+    () =>
+      OBR.broadcast.onMessage(ROLL_RESULT_CHANNEL, (event) => {
+        const data = event.data as RollResult;
+        if (data.type !== "structured") {
+          console.error("expected structured roll result");
+          return;
+        }
+        OBR.action.open();
+        const rolls = data.result.flatMap((result) => Object.values(result));
+        for (let i = 0; i < rolls.length; i++) {
+          if (rolls[i] === 0) rolls[i] = 10;
+        }
+        setResult(powerRoll(bonus, edges, banes, playerName, rolls));
+      }),
+    [bonus, edges, banes, playerName],
+  );
+
   return (
     <div className="h-full overflow-clip">
       <div className="flex h-full flex-col justify-between bg-mirage-50/75 dark:bg-mirage-950/55 dark:text-mirage-200">
-        <Header playerRole={playerRole} />
+        <div className="flex items-center gap-2 p-4 pb-2 pt-3">
+          <h1 className="w-full font-bold">Draw Steel Tools</h1>
+
+          <div className="flex gap-2">
+            {diceRequestChannel === undefined ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={() => {
+                      connectToDiceExtension();
+                    }}
+                    variant={"ghost"}
+                    size={"icon"}
+                  >
+                    <PlugZap />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  Connect Dice Roller
+                </TooltipContent>
+              </Tooltip>
+            ) : (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onClick={() => {
+                      setDiceRequestChannel(undefined);
+                      setDieStyles(undefined);
+                      setCurrentDieStyle(undefined);
+                    }}
+                    variant={"ghost"}
+                    size={"icon"}
+                  >
+                    <UnplugIcon />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  Disconnect Dice Roller
+                </TooltipContent>
+              </Tooltip>
+            )}
+            {playerRole === "GM" ? (
+              <Button
+                size={"icon"}
+                variant={"ghost"}
+                className="shrink-0"
+                onClick={async () => {
+                  const themeMode = (await OBR.theme.getTheme()).mode;
+                  OBR.popover.open({
+                    id: getPluginId("settings"),
+                    url: `/src/settings/settings.html?themeMode=${themeMode}`,
+                    height: 500,
+                    width: 400,
+                  });
+                }}
+              >
+                <Settings2 />
+              </Button>
+            ) : (
+              <MoreDropDown />
+            )}
+          </div>
+        </div>
 
         <ScrollArea className="h-full">
           <div className="space-y-2 px-4">
-            <h1 className="font-bold">Resources</h1>
+            <h1 className="pt-4 font-bold">Resources</h1>
             <div className="flex gap-4">
               {playerRole === "GM" && (
                 <TrackerInput
@@ -128,55 +267,86 @@ export default function App(): React.JSX.Element {
               />
             </div>
 
-            <h1 className="font-bold">Power Roll</h1>
+            <h1 className="pt-2 font-bold">Power Roll</h1>
 
-            <div className="space-y-2">
-              <div className="flex gap-4">
-                <div className="w-full space-y-2">
-                  <h2 className="block text-xs font-normal text-text-secondary dark:text-text-secondary-dark">
-                    Edges
-                  </h2>
-                  <IntegerButtonGroup
-                    startValue={0}
-                    endValue={2}
-                    value={edges}
-                    onClick={(newValue: number) => setEdges(newValue)}
-                  />
-                </div>
-
-                <div className="w-full space-y-2">
-                  <h2 className="block text-xs font-normal text-text-secondary dark:text-text-secondary-dark">
-                    Banes
-                  </h2>
-                  <IntegerButtonGroup
-                    startValue={0}
-                    endValue={2}
-                    value={banes}
-                    onClick={(newValue: number) => setBanes(newValue)}
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 items-end gap-4">
-                <TrackerInput
-                  parentValue={bonus.toString()}
-                  clearContentOnFocus
-                  updateHandler={(target) =>
-                    setBonus(inlineMath("=" + target.value, bonus))
-                  }
-                  name={"Bonus"}
-                  label={"Bonus"}
+            <div className="flex gap-4">
+              <div className="w-full space-y-2">
+                <h2 className="block text-xs font-normal text-text-secondary dark:text-text-secondary-dark">
+                  Edges
+                </h2>
+                <IntegerButtonGroup
+                  startValue={0}
+                  endValue={2}
+                  value={edges}
+                  onClick={(newValue: number) => setEdges(newValue)}
                 />
-                <Button
-                  className="w-16 justify-self-end"
-                  variant={"default"}
-                  onClick={() =>
-                    setResult(powerRoll(bonus, edges, banes, playerName))
-                  }
-                >
-                  Roll
-                </Button>
               </div>
+
+              <div className="w-full space-y-2">
+                <h2 className="block text-xs font-normal text-text-secondary dark:text-text-secondary-dark">
+                  Banes
+                </h2>
+                <IntegerButtonGroup
+                  startValue={0}
+                  endValue={2}
+                  value={banes}
+                  onClick={(newValue: number) => setBanes(newValue)}
+                />
+              </div>
+            </div>
+
+            <div className="flex items-end gap-4">
+              <TrackerInput
+                parentValue={bonus.toString()}
+                clearContentOnFocus
+                updateHandler={(target) =>
+                  setBonus(inlineMath("=" + target.value, bonus))
+                }
+                name={"Bonus"}
+                label={"Bonus"}
+              />
+              {diceRequestChannel === undefined ? (
+                <>
+                  <Button
+                    className="w-16 justify-self-end"
+                    variant={"default"}
+                    onClick={() =>
+                      setResult(powerRoll(bonus, edges, banes, playerName))
+                    }
+                  >
+                    Roll
+                  </Button>
+                </>
+              ) : (
+                <>
+                  {dieStyles !== undefined && (
+                    <div>
+                      <DiceStylePicker
+                        currentDieStyle={currentDieStyle}
+                        dieStyles={dieStyles}
+                        onStyleClick={setCurrentDieStyle}
+                      />
+                    </div>
+                  )}
+
+                  <Button
+                    onClick={() => {
+                      OBR.broadcast.sendMessage(
+                        diceRequestChannel,
+                        createRollRequest({
+                          style: currentDieStyle?.style,
+                          hidden: false,
+                        }),
+                        {
+                          destination: "LOCAL",
+                        },
+                      );
+                    }}
+                  >
+                    Roll
+                  </Button>
+                </>
+              )}
             </div>
           </div>
 
@@ -223,6 +393,7 @@ function powerRoll(
   edges: number,
   banes: number,
   playerName: string,
+  rollValues?: number[],
 ): Roll {
   // Validate Input
   const naturalBonus = bonus;
@@ -230,8 +401,12 @@ function powerRoll(
   if (!validEdgeValue(banes)) throw new Error("Invalid Banes Value");
 
   // Make roll
-  const diceRoll = powerRollDice();
-  const naturalResult = diceRoll.total;
+  if (rollValues === undefined) rollValues = powerRollDice();
+  let total = 0;
+  for (const roll of rollValues) {
+    total += roll;
+  }
+  const naturalResult = total;
   if (naturalResult >= 19) {
     return {
       timeStamp: Date.now(),
@@ -242,7 +417,7 @@ function powerRoll(
       critical: true,
       tier: 3,
       total: naturalResult,
-      rolls: diceRoll.rolls,
+      rolls: rollValues,
     };
   }
 
@@ -283,7 +458,7 @@ function powerRoll(
     critical: false,
     tier,
     total: naturalResult,
-    rolls: diceRoll.rolls,
+    rolls: rollValues,
   };
 }
 
@@ -295,11 +470,47 @@ function validEdgeValue(value: number) {
 
 function powerRollDice() {
   const rolls: number[] = [];
-  let total = 0;
   for (let i = 0; i < 2; i++) {
     const value = Math.trunc(Math.random() * 10) + 1;
-    total += value;
     rolls.push(value);
   }
-  return { total, rolls };
+  return rolls;
+}
+
+function createRollRequest({
+  style,
+  hidden,
+}: {
+  style?: string;
+  hidden: boolean;
+}): RollRequest {
+  return {
+    replyChannel: ROLL_RESULT_CHANNEL,
+    dice: [
+      {
+        id: (Math.random() * 1000000).toString(),
+        ...(style !== undefined ? { style } : {}),
+        type: "D10",
+      },
+      {
+        id: (Math.random() * 1000000).toString(),
+        ...(style !== undefined ? { style } : {}),
+        type: "D10",
+      },
+    ],
+    hidden,
+    type: "structured",
+  };
+}
+
+function connectToDiceExtension() {
+  OBR.broadcast.sendMessage(
+    "general.dice.hello",
+    {
+      replyChannel: HELLO_DICE_ROLLER_CHANNEL,
+    } as CheckForDiceExtensions,
+    {
+      destination: "LOCAL",
+    },
+  );
 }
