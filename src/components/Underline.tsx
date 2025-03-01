@@ -26,7 +26,7 @@ export default function Underline({
             color === "GREEN" && hasFocus,
           "border-stat-blue dark:border-stat-blue-dark":
             color === "BLUE" && hasFocus,
-          "border-amber-400 dark:border-amber-500":
+          "border-amber-400 dark:border-amber-400":
             color === "GOLD" && hasFocus,
           "border-primary dark:border-primary-dark":
             color === "DEFAULT" && hasFocus,

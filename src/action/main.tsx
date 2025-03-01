@@ -19,7 +19,7 @@ OBR.onReady(async () => {
     <TooltipProvider
       disableHoverableContent
       skipDelayDuration={0}
-      delayDuration={400}
+      delayDuration={0}
     >
       <App />
     </TooltipProvider>,
