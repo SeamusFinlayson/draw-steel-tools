@@ -22,7 +22,7 @@ export default function MoreDropDown() {
           <EllipsisVertical />
         </Button>
       </PopoverTrigger>
-      <PopoverContent>
+      <PopoverContent sideOffset={8}>
         <ScrollArea className="h-full">
           <div className="grid w-full grid-cols-1 items-center gap-2 p-1">
             <LinkButton
@@ -36,7 +36,7 @@ export default function MoreDropDown() {
               className="rounded border-none"
               name="Change Log"
               icon={<History />}
-              href={"https://www.patreon.com/collection/306916?view=expanded"}
+              href={"https://www.patreon.com/collection/1364023?view=expanded"}
               tooltipProps={{ side: "left", sideOffset: 8 }}
             />
             <LinkButton
@@ -44,7 +44,7 @@ export default function MoreDropDown() {
               name="Instructions"
               icon={<QuestionMark />}
               href={
-                "https://github.com/SeamusFinlayson/Bubbles-for-Owlbear-Rodeo?tab=readme-ov-file#how-it-works"
+                "https://github.com/SeamusFinlayson/draw-steel-stat-bubbles"
               }
               tooltipProps={{ side: "left", sideOffset: 8 }}
             />

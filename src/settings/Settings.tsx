@@ -47,7 +47,7 @@ export default function Settings(): React.JSX.Element {
             <div>
               <h1 className="text-2xl font-light">Settings</h1>
               <p className="text-xs text-mirage-400">
-                <i>Stat Bubbles for D&D</i>
+                <i>Draw Steel Tools</i>
               </p>
             </div>
             <div className="flex gap-2 pr-0.5">
@@ -59,13 +59,15 @@ export default function Settings(): React.JSX.Element {
               <LinkButton
                 name="Change Log"
                 icon={<History />}
-                href={"https://www.patreon.com/collection/306916?view=expanded"}
+                href={
+                  "https://www.patreon.com/collection/1364023?view=expanded"
+                }
               />
               <LinkButton
                 name="Instructions"
                 icon={<QuestionMark />}
                 href={
-                  "https://github.com/SeamusFinlayson/Bubbles-for-Owlbear-Rodeo?tab=readme-ov-file#how-it-works"
+                  "https://github.com/SeamusFinlayson/draw-steel-stat-bubbles"
                 }
               />
               <LinkButton

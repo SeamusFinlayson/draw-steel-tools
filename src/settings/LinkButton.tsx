@@ -17,7 +17,9 @@ export default function LinkButton({
   icon: React.JSX.Element;
   href: string;
   className?: string;
-  tooltipProps: React.ComponentPropsWithoutRef<typeof TooltipPrimitive.Content>;
+  tooltipProps?: React.ComponentPropsWithoutRef<
+    typeof TooltipPrimitive.Content
+  >;
 }): React.JSX.Element {
   return (
     <Tooltip>

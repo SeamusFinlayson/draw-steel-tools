@@ -162,8 +162,8 @@ export default function App(): React.JSX.Element {
   return (
     <div className="h-full overflow-clip">
       <div className="flex h-full flex-col justify-between bg-mirage-50/75 dark:bg-mirage-950/55 dark:text-mirage-200">
-        <div className="flex items-center gap-2 p-4 pb-2 pt-3">
-          <h1 className="w-full font-bold">Draw Steel Tools</h1>
+        <div className="flex items-center gap-2 p-4 pb-2 pt-4">
+          <h1 className="w-full text-base font-bold">Draw Steel Tools</h1>
 
           <div className="flex gap-2">
             {diceRequestChannel === undefined ? (
