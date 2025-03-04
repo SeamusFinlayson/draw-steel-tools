@@ -6,12 +6,10 @@ import "../index.css";
 import { addThemeToBody } from "@/colorHelpers";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { BROADCAST_CHANNEL, DICE_ROLL } from "./helpers";
-import createToolActionShortcut from "./createToolActionShortcut";
 
 OBR.onReady(async () => {
   const [theme] = await Promise.all([OBR.theme.getTheme()]);
   addThemeToBody(theme.mode);
-  createToolActionShortcut();
 
   // Render React component
   const root = createRoot(document.getElementById("app") as HTMLDivElement);

@@ -18,7 +18,11 @@ export default function MoreDropDown() {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button className="rounded-md" size={"icon"} variant={"ghost"}>
+        <Button
+          className="size-10 shrink-0 rounded-full"
+          size={"icon"}
+          variant={"ghost"}
+        >
           <EllipsisVertical />
         </Button>
       </PopoverTrigger>

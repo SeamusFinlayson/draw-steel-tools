@@ -1,6 +1,6 @@
 {
   "name": "Draw Steel Tools",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "manifest_version": 2,
   "author": "Seamus Finlayson",
   "homepage_url": "https://github.com/SeamusFinlayson/Bubbles-for-Owlbear-Rodeo",
@@ -11,7 +11,7 @@
     "title": "Draw Steel Tools",
     "icon": "/status.svg",
     "popover": "/src/action/action.html",
-    "height": 522,
+    "height": 600,
     "width": 300
   }
 }

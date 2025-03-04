@@ -5,7 +5,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { DieStyle } from "@/diceProtocol";
 import { useState } from "react";
 
 import { SwatchBook } from "lucide-react";
@@ -14,26 +13,27 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { DiceProtocol } from "@/diceProtocol";
 
 export default function DiceStylePicker({
   currentDieStyle,
   dieStyles,
   onStyleClick,
 }: {
-  currentDieStyle: DieStyle | undefined;
-  dieStyles: DieStyle[];
-  onStyleClick: (style: DieStyle) => void;
+  currentDieStyle: DiceProtocol.DieStyle | undefined;
+  dieStyles: DiceProtocol.DieStyle[];
+  onStyleClick: (style: DiceProtocol.DieStyle) => void;
 }) {
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [tooltipOpen, setTooltipOpen] = useState(false);
 
   return (
     <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
-      <Tooltip open={tooltipOpen}>
+      <Tooltip open={false}>
         <TooltipTrigger asChild>
           <PopoverTrigger asChild>
             <Button
-              className="flex w-fit gap-3 rounded-md px-2"
+              className="flex w-full justify-between gap-3 rounded-md px-2"
               size={"icon"}
               variant={"ghost"}
               onMouseEnter={() => {
@@ -45,19 +45,19 @@ export default function DiceStylePicker({
                 setTooltipOpen(false);
               }}
             >
-              <SwatchBook />
+              <SwatchBook className="shrink-0" />
               {currentDieStyle === undefined ? (
-                <div className="size-5 rounded-full outline outline-2 -outline-offset-2" />
+                <div className="h-6 w-full rounded outline outline-1 -outline-offset-2 dark:outline-white/20" />
               ) : (
                 <div
-                  className="size-5 rounded-full"
-                  style={{ backgroundColor: currentDieStyle.code }}
+                  className="h-6 w-full rounded"
+                  style={{ backgroundColor: currentDieStyle.color }}
                 />
               )}
             </Button>
           </PopoverTrigger>
         </TooltipTrigger>
-        <TooltipContent side="bottom">Dice Style</TooltipContent>
+        <TooltipContent side="top">Dice Style</TooltipContent>
       </Tooltip>
       <PopoverContent collisionPadding={16} sideOffset={8}>
         <ScrollArea className="h-full">
@@ -65,8 +65,8 @@ export default function DiceStylePicker({
             {dieStyles.map((style) => (
               <button
                 className="size-8 rounded-md"
-                key={style.style}
-                style={{ backgroundColor: style.code }}
+                key={style.id}
+                style={{ backgroundColor: style.color }}
                 onClick={() => {
                   onStyleClick(style);
                   setPopoverOpen(false);

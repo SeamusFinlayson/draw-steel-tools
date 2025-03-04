@@ -263,7 +263,7 @@ export default function StatsMenuApp({
         )}
         onClick={() => toggleHide()}
       >
-        {token.gmOnly && true ? (
+        {token.gmOnly ? (
           <div className="inline-flex items-center gap-2 text-primary-800 hover:text-primary-800 dark:text-primary-dark-300 dark:hover:text-primary-dark-300">
             <BookLock size={20} />
             <div className="uppercase">Director Only</div>

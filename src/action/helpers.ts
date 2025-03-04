@@ -1,7 +1,6 @@
 import OBR, { Metadata } from "@owlbear-rodeo/sdk";
 import { getPluginId } from "@/getPluginId";
-import { Action, ActionAppState, StampedDiceRoll, Trackers } from "./types";
-import { DiceRoll } from "@dice-roller/rpg-dice-roller";
+import { Roll, Trackers } from "./types";
 import {
   getPluginMetadata,
   readNumberFromObject,
@@ -34,81 +33,102 @@ export async function getTrackersFromScene(sceneMetadata?: Metadata) {
   };
 }
 
-/* Dice */
+export function powerRoll(
+  bonus: number,
+  edges: number,
+  banes: number,
+  playerName: string,
+  rollValues?: number[],
+): Roll {
+  // Validate Input
+  const naturalBonus = bonus;
+  if (!validEdgeValue(edges)) throw new Error("Invalid Edges Value");
+  if (!validEdgeValue(banes)) throw new Error("Invalid Banes Value");
 
-const DICE_METADATA_ID = getPluginId("diceRolls");
-
-export async function setSceneRolls(rolls: StampedDiceRoll[]) {
-  await OBR.scene.setMetadata({ [DICE_METADATA_ID]: rolls });
-}
-
-export async function getRollsFromScene(sceneMetadata?: Metadata) {
-  if (sceneMetadata === undefined)
-    sceneMetadata = await OBR.scene.getMetadata();
-  const diceRolls = sceneMetadata[DICE_METADATA_ID];
-  if (diceRolls === undefined) return [];
-  if (!isDiceRollArray(diceRolls)) throw "Error: invalid dice roll array";
-  return diceRolls;
-}
-
-function isDiceRollArray(rolls: unknown): rolls is StampedDiceRoll[] {
-  if (!Array.isArray(rolls)) return false;
-  for (const roll of rolls) {
-    if (typeof roll?.timeStamp !== "number") return false;
-    if (typeof roll?.total !== "number") return false;
-    if (typeof roll?.roll !== "string") return false;
-    if (typeof roll?.playerName !== "string") return false;
-    if (typeof roll?.visibility !== "string") return false;
-    if (roll.visibility === "PRIVATE") {
-      if (typeof roll?.userId !== "string") return false;
-    }
+  // Make roll
+  if (rollValues === undefined) rollValues = powerRollDice();
+  let total = 0;
+  for (const roll of rollValues) {
+    total += roll;
   }
+  const naturalResult = total;
+  const critical = naturalResult >= 19;
+
+  // Apply single banes
+  const netEdges = edges - banes;
+  bonus += getBonusFromNetEdges(netEdges);
+  const rollResult = naturalResult + bonus;
+
+  // Get tier
+  let tier = 0;
+  if (critical) tier = 3;
+  else if (rollResult < 12) tier = 1;
+  else if (rollResult < 17) tier = 2;
+  else tier = 3;
+
+  // Apply double banes
+  switch (netEdges) {
+    case -2:
+      if (tier > 1) tier -= 1;
+      break;
+    case 2:
+      if (tier < 3) tier += 1;
+      break;
+  }
+
+  return {
+    timeStamp: Date.now(),
+    playerName,
+    bonus: naturalBonus,
+    netEdges,
+    critical,
+    tier,
+    total: rollResult,
+    rolls: rollValues,
+  };
+}
+
+export function getBonusFromNetEdges(netEdges: number) {
+  switch (netEdges) {
+    case -1:
+      return -2;
+    case 1:
+      return 2;
+  }
+  return 0;
+}
+
+function validEdgeValue(value: number) {
+  const validEdgeOrBane = [0, 1, 2];
+  if (!validEdgeOrBane.includes(value)) return false;
   return true;
 }
 
-const MAX_DICE_ROLLS = 100;
-export function reducer(state: ActionAppState, action: Action): ActionAppState {
-  switch (action.type) {
-    case "set-rolls":
-      return { ...state, rolls: action.rolls };
-    case "add-roll":
-      const roll = new DiceRoll(action.diceExpression);
-      const rolls = [
-        action.visibility === "PRIVATE"
-          ? {
-              timeStamp: Date.now(),
-              total: roll.total,
-              roll: roll.toString(),
-              playerName: action.playerName,
-              visibility: action.visibility,
-              playerId: action.playerId,
-            }
-          : {
-              timeStamp: Date.now(),
-              total: roll.total,
-              roll: roll.toString(),
-              playerName: action.playerName,
-              visibility: action.visibility,
-            },
-        ...state.rolls.splice(0, MAX_DICE_ROLLS - 1),
-      ];
-      setSceneRolls(rolls);
-      setTimeout(
-        () => action.dispatch({ type: "set-animate-roll", animateRoll: false }),
-        500,
-      );
-      return {
-        ...state,
-        rolls: rolls,
-        value: roll.total,
-        animateRoll: true,
-      };
-    case "set-value":
-      return { ...state, value: action.value };
-    case "set-animate-roll":
-      return { ...state, animateRoll: action.animateRoll };
-    default:
-      console.log("unhandled action");
-      return state;
+function powerRollDice() {
+  const rolls: number[] = [];
+  for (let i = 0; i < 2; i++) {
+    const value = Math.trunc(Math.random() * 10) + 1;
+    rolls.push(value);
   }
+  return rolls;
 }
+
+export const netEdgesTextAndLabel = (
+  netEdges: number,
+): {
+  text: string;
+  label: string;
+} => {
+  switch (netEdges) {
+    case -2:
+      return { text: "-1 Tier", label: "Double Bane" };
+    case -1:
+      return { text: "-2", label: "Bane" };
+    case 1:
+      return { text: "+2", label: "Edge" };
+    case 2:
+      return { text: "+1 Tier", label: "Double Edge" };
+  }
+
+  return { text: "", label: "" };
+};

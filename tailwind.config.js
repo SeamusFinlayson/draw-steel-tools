@@ -14,7 +14,7 @@ export default {
       lg: "500px",
     },
     extend: {
-      fontSize: { "2xs": "9px" },
+      fontSize: { "2xs": "11px" },
       animation: { "inverse-bounce": "hiThere 0.5s infinite" },
       transitionProperty: {
         height: "height",
@@ -112,11 +112,7 @@ export default {
           },
         },
       },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
-      },
+
     },
   },
   plugins: [require("tailwindcss-animate")],

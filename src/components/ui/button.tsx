@@ -18,7 +18,7 @@ const buttonVariants = cva(
         secondary:
           "bg-mirage-300/80 text-mirage-900 shadow-sm hover:bg-mirage-300/60 dark:bg-mirage-800 dark:text-mirage-50 dark:hover:bg-mirage-800/80",
         ghost:
-          "hover:bg-mirage-200 hover:text-mirage-900 dark:hover:bg-mirage-800 dark:hover:text-mirage-50",
+          "hover:bg-mirage-200 hover:text-mirage-900 dark:hover:bg-white/10 dark:hover:text-mirage-50",
         link: "text-mirage-900 underline-offset-4 hover:underline dark:text-mirage-50",
       },
       size: {
