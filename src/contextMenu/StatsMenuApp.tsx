@@ -154,7 +154,7 @@ export default function StatsMenuApp({
           updateHandler={(target) => handleStatUpdate(target, token.stamina)}
           animateOnlyWhenRootActive
         />
-        <div className="flex items-end pb-[18px] text-text-secondary dark:text-text-secondary-dark">
+        <div className="flex items-end pb-[2px] text-text-secondary dark:text-text-secondary-dark">
           /
         </div>
         <TrackerInput
@@ -177,6 +177,30 @@ export default function StatsMenuApp({
           name={TEMP_STAMINA_METADATA_ID}
           label={"Temporary Stamina"}
           color="GREEN"
+          parentValue={token.temporaryStamina.toString()}
+          showParentValue
+          updateHandler={(target) =>
+            handleStatUpdate(target, token.temporaryStamina)
+          }
+          animateOnlyWhenRootActive
+        />
+        <TrackerInput
+          clearContentOnFocus
+          name={TEMP_STAMINA_METADATA_ID}
+          label={"Temporary Stamina"}
+          color="BLUE"
+          parentValue={token.temporaryStamina.toString()}
+          showParentValue
+          updateHandler={(target) =>
+            handleStatUpdate(target, token.temporaryStamina)
+          }
+          animateOnlyWhenRootActive
+        />
+        <TrackerInput
+          clearContentOnFocus
+          name={TEMP_STAMINA_METADATA_ID}
+          label={"Temporary Stamina"}
+          color="GOLD"
           parentValue={token.temporaryStamina.toString()}
           showParentValue
           updateHandler={(target) =>
@@ -282,7 +306,9 @@ export default function StatsMenuApp({
     <div className="space-y-1 overflow-hidden px-2 py-1">
       {nameTagsEnabled && NameField}
       {StatsMenu}
-      {role === "GM" && HideButton}
+      {role === "GM" && (
+        <div className="flex size-full justify-center">{HideButton}</div>
+      )}
     </div>
   );
 }

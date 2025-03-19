@@ -5,7 +5,7 @@ import { Settings } from "@/metadataHelpers/settingMetadataHelpers";
 import { getSelectedItems } from "@/metadataHelpers/itemMetadataHelpers";
 
 const NAME_HEIGHT = 44;
-const HERO_STATS_HEIGHT = 192;
+const HERO_STATS_HEIGHT = 300;
 const MONSTER_STATS_HEIGHT = 128;
 const HIDE_HEIGHT = 40;
 const PADDING = 8;

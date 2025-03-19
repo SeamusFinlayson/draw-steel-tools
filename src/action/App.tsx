@@ -367,7 +367,7 @@ export default function App(): React.JSX.Element {
 const DiceRollViewer = ({ result }: { result: Roll }) => (
   <div className="space-y-2">
     <div>
-      <div className="flex min-h-9 flex-wrap items-center justify-evenly gap-y-2 rounded-t-md border border-mirage-300 p-2 px-4 dark:border-mirage-800">
+      <div className="flex min-h-9 flex-wrap items-center justify-evenly gap-y-2 rounded-t-md border border-text-secondary p-2 px-4 dark:border-white/20">
         <TextAndLabel
           text={`${result.rolls[0]}, ${result.rolls[1]}`}
           label="Roll"
@@ -384,7 +384,7 @@ const DiceRollViewer = ({ result }: { result: Roll }) => (
           <TextAndLabel {...netEdgesTextAndLabel(result.netEdges)} />
         )}
       </div>
-      <div className="flex items-center justify-evenly gap-4 rounded-b-md border border-t-0 border-mirage-300 bg-mirage-50 p-2 px-4 dark:border-mirage-800 dark:bg-mirage-950/70">
+      <div className="flex items-center justify-evenly gap-4 rounded-b-md border border-t-0 border-text-secondary bg-mirage-50 p-2 px-4 dark:border-white/20 dark:bg-mirage-950/70">
         <TextAndLabel text={result.total.toString()} label="Total" />
         <TextAndLabel
           text={result.critical ? "Critical" : `${result.tier}`}

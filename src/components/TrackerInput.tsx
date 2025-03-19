@@ -32,17 +32,14 @@ export default function TrackerInput({
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
-    <div className="w-full pt-0.5 text-text-primary dark:text-text-primary-dark">
+    <div className="w-full py-1 text-text-primary dark:text-text-primary-dark">
       <div
-        className={cn("group bg-gradient-to-t", {
-          "from-stat-red/20 dark:from-stat-red-dark/20": color === "RED",
-          "from-stat-green/20 dark:from-stat-green-dark/20": color === "GREEN",
-          "from-stat-blue/20 dark:from-stat-blue-dark/20": color === "BLUE",
-          "from-amber-400/20 dark:from-amber-600/20": color === "GOLD",
-        })}
-        onClick={() => {
-          if (inputRef.current) inputRef.current.focus();
-        }}
+      // className={cn("group bg-gradient-to-t", {
+      //   "from-stat-red/20 dark:from-stat-red-dark/20": color === "RED",
+      //   "from-stat-green/20 dark:from-stat-green-dark/20": color === "GREEN",
+      //   "from-stat-blue/20 dark:from-stat-blue-dark/20": color === "BLUE",
+      //   "from-amber-400/20 dark:from-amber-600/20": color === "GOLD",
+      // })}
       >
         <div className="space-y-1">
           {(labelStyle === "VISIBLE" || labelStyle === "HIDDEN") && (
@@ -57,7 +54,15 @@ export default function TrackerInput({
             </label>
           )}
 
-          <div className="flex" onClick={(e) => e.stopPropagation()}>
+          <div
+            className={cn("flex h-9 rounded-md shadow", {
+              "bg-red-400/20 dark:bg-red-600/30": color === "RED",
+              "bg-lime-400/20 dark:bg-lime-600/30": color === "GREEN",
+              "bg-cyan-400/20 dark:bg-cyan-600/30": color === "BLUE",
+              "bg-amber-400/20 dark:bg-amber-600/30": color === "GOLD",
+            })}
+            onClick={(e) => e.stopPropagation()}
+          >
             <PartiallyControlledInput
               ref={inputRef}
               id={name}
@@ -69,29 +74,12 @@ export default function TrackerInput({
               parentValue={parentValue.toString()}
               onUserConfirm={updateHandler}
               clearContentOnFocus={clearContentOnFocus}
-              className={cn("w-full bg-transparent outline-none")}
+              className={cn("w-full bg-transparent px-2 outline-none")}
               placeholder={labelStyle === "PLACEHOLDER" ? label : undefined}
             />
           </div>
         </div>
-
-        <InputUnderline
-          hasFocus={hasFocus}
-          hasHover={hasHover}
-          color={color}
-          animateOnlyWhenRootActive={animateOnlyWhenRootActive}
-        />
       </div>
-      {showParentValue ? (
-        <UnderlineDropDown
-          content={parentValue}
-          hasFocus={hasFocus}
-          color={color}
-          animateOnlyWhenRootActive={animateOnlyWhenRootActive}
-        />
-      ) : (
-        <></>
-      )}
     </div>
   );
 }
