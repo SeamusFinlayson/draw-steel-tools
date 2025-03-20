@@ -12,7 +12,7 @@ import {
   getSelectedItems,
   parseItems,
 } from "../metadataHelpers/itemMetadataHelpers";
-import TrackerInput from "../components/TrackerInput";
+import ValueTrackerInput from "../components/ValueTrackerInput";
 import { Button } from "@/components/ui/button";
 import BookLock from "@/components/icons/BookLock";
 import BookOpen from "@/components/icons/BookOpen";
@@ -32,8 +32,9 @@ import {
   SURGES_METADATA_ID,
   TEMP_STAMINA_METADATA_ID,
 } from "@/metadataHelpers/itemMetadataIds";
-import Counter from "@/components/Counter";
+import Counter from "@/components/CounterTracker";
 import NameInput from "@/components/NameInput";
+import BarTrackerInput from "@/components/BarTrackerInput";
 
 export default function StatsMenuApp({
   initialToken,
@@ -63,10 +64,11 @@ export default function StatsMenuApp({
     [],
   );
 
-  function handleStatUpdate(target: HTMLInputElement, previousValue: number) {
-    const name = target.name;
-    if (!isStatMetadataId(name)) throw "Error: invalid input name.";
-
+  function handleStatUpdate(
+    name: StatMetadataID,
+    target: HTMLInputElement,
+    previousValue: number,
+  ) {
     const value = getNewStatValue(name, target.value, previousValue);
 
     setToken((prev) => ({ ...prev, [name]: value }) as Token);
@@ -112,11 +114,8 @@ export default function StatsMenuApp({
   );
 
   const NameField: React.JSX.Element = (
-    <div className="flex min-h-10 items-center gap-3 px-1 pb-1">
+    <div className="">
       <NameInput
-        name="Name"
-        label={"Name"}
-        labelStyle="PLACEHOLDER"
         parentValue={tokenName}
         onActionClick={
           tokenName === ""
@@ -136,119 +135,106 @@ export default function StatsMenuApp({
           setTokenName(newName);
           writeNameToSelectedItem(newName, updateName);
         }}
-        animateOnlyWhenRootActive
       />
     </div>
   );
 
   const StatsMenu: React.JSX.Element = (
-    <div className="px-1 text-text-primary dark:text-text-primary-dark">
-      <div className="flex w-full justify-around gap-2">
-        <TrackerInput
-          clearContentOnFocus
-          name={STAMINA_METADATA_ID}
-          label={"Stamina"}
-          color="RED"
-          parentValue={token.stamina.toString()}
-          showParentValue
-          updateHandler={(target) => handleStatUpdate(target, token.stamina)}
-          animateOnlyWhenRootActive
-        />
-        <div className="flex items-end pb-[18px] text-text-secondary dark:text-text-secondary-dark">
-          /
+    <div className="text-text-primary dark:text-text-primary-dark">
+      <div className="grid grid-cols-2 justify-around gap-x-2 gap-y-2">
+        <div
+          className={cn("col-span-2", {
+            "col-span-1": token.type === "MONSTER",
+          })}
+        >
+          <BarTrackerInput
+            label={"Stamina"}
+            color="RED"
+            parentValue={token.stamina.toString()}
+            parentMax={token.staminaMaximum.toString()}
+            valueUpdateHandler={(target) =>
+              handleStatUpdate(STAMINA_METADATA_ID, target, token.stamina)
+            }
+            maxUpdateHandler={(target) =>
+              handleStatUpdate(
+                STAMINA_MAXIMUM_METADATA_ID,
+                target,
+                token.stamina,
+              )
+            }
+          />
         </div>
-        <TrackerInput
-          clearContentOnFocus
-          name={STAMINA_MAXIMUM_METADATA_ID}
-          label={"Stamina Maximum"}
-          labelStyle="HIDDEN"
-          color="RED"
-          parentValue={token.staminaMaximum.toString()}
-          showParentValue
-          updateHandler={(target) =>
-            handleStatUpdate(target, token.staminaMaximum)
-          }
-          animateOnlyWhenRootActive
-        />
-      </div>
-      <div className="grid grid-cols-2 justify-around gap-x-2">
-        <TrackerInput
-          clearContentOnFocus
-          name={TEMP_STAMINA_METADATA_ID}
+        <ValueTrackerInput
           label={"Temporary Stamina"}
           color="GREEN"
           parentValue={token.temporaryStamina.toString()}
-          showParentValue
           updateHandler={(target) =>
-            handleStatUpdate(target, token.temporaryStamina)
+            handleStatUpdate(
+              TEMP_STAMINA_METADATA_ID,
+              target,
+              token.temporaryStamina,
+            )
           }
-          animateOnlyWhenRootActive
         />
+
         {token.type !== "MONSTER" && (
-          <Counter
-            clearContentOnFocus
-            name={HEROIC_RESOURCE_METADATA_ID}
-            label={"Heroic Resource"}
-            labelStyle={"VISIBLE"}
-            color="BLUE"
-            parentValue={token.heroicResource}
-            showParentValue
-            updateHandler={(target) =>
-              handleStatUpdate(target, token.heroicResource)
-            }
-            incrementHandler={() =>
-              setStatValue(
-                HEROIC_RESOURCE_METADATA_ID,
-                token.heroicResource + 1,
-              )
-            }
-            decrementHandler={() =>
-              setStatValue(
-                HEROIC_RESOURCE_METADATA_ID,
-                token.heroicResource - 1,
-              )
-            }
-            animateOnlyWhenRootActive
-          />
-        )}
-        {token.type !== "MONSTER" && (
-          <Counter
-            clearContentOnFocus
-            name={SURGES_METADATA_ID}
-            label={"Surges"}
-            color="GOLD"
-            labelStyle={"VISIBLE"}
-            parentValue={token.surges}
-            showParentValue
-            updateHandler={(target) => handleStatUpdate(target, token.surges)}
-            incrementHandler={() =>
-              setStatValue(SURGES_METADATA_ID, token.surges + 1)
-            }
-            decrementHandler={() =>
-              setStatValue(SURGES_METADATA_ID, token.surges - 1)
-            }
-            animateOnlyWhenRootActive
-          />
-        )}
-        {token.type !== "MONSTER" && (
-          <Counter
-            clearContentOnFocus
-            name={RECOVERIES_METADATA_ID}
-            label={"Recoveries"}
-            labelStyle={"VISIBLE"}
-            parentValue={token.recoveries}
-            showParentValue
-            updateHandler={(target) =>
-              handleStatUpdate(target, token.recoveries)
-            }
-            incrementHandler={() =>
-              setStatValue(RECOVERIES_METADATA_ID, token.recoveries + 1)
-            }
-            decrementHandler={() =>
-              setStatValue(RECOVERIES_METADATA_ID, token.recoveries - 1)
-            }
-            animateOnlyWhenRootActive
-          />
+          <>
+            <Counter
+              label={"Heroic Resource"}
+              color="BLUE"
+              parentValue={token.heroicResource}
+              updateHandler={(target) =>
+                handleStatUpdate(
+                  HEROIC_RESOURCE_METADATA_ID,
+                  target,
+                  token.heroicResource,
+                )
+              }
+              incrementHandler={() =>
+                setStatValue(
+                  HEROIC_RESOURCE_METADATA_ID,
+                  token.heroicResource + 1,
+                )
+              }
+              decrementHandler={() =>
+                setStatValue(
+                  HEROIC_RESOURCE_METADATA_ID,
+                  token.heroicResource - 1,
+                )
+              }
+            />
+            <Counter
+              label={"Surges"}
+              color="GOLD"
+              parentValue={token.surges}
+              updateHandler={(target) =>
+                handleStatUpdate(SURGES_METADATA_ID, target, token.surges)
+              }
+              incrementHandler={() =>
+                setStatValue(SURGES_METADATA_ID, token.surges + 1)
+              }
+              decrementHandler={() =>
+                setStatValue(SURGES_METADATA_ID, token.surges - 1)
+              }
+            />
+            <Counter
+              label={"Recoveries"}
+              parentValue={token.recoveries}
+              updateHandler={(target) =>
+                handleStatUpdate(
+                  RECOVERIES_METADATA_ID,
+                  target,
+                  token.recoveries,
+                )
+              }
+              incrementHandler={() =>
+                setStatValue(RECOVERIES_METADATA_ID, token.recoveries + 1)
+              }
+              decrementHandler={() =>
+                setStatValue(RECOVERIES_METADATA_ID, token.recoveries - 1)
+              }
+            />
+          </>
         )}
       </div>
     </div>
@@ -259,12 +245,12 @@ export default function StatsMenuApp({
       <Button
         variant={"ghost"}
         className={cn(
-          "flex rounded-full text-sm font-normal text-text-primary dark:text-text-primary-dark dark:hover:bg-mirage-50/15",
+          "text-text-primary dark:text-text-primary-dark dark:hover:bg-mirage-50/15 flex rounded-full text-sm font-normal",
         )}
         onClick={() => toggleHide()}
       >
         {token.gmOnly ? (
-          <div className="inline-flex items-center gap-2 text-primary-800 hover:text-primary-800 dark:text-primary-dark-300 dark:hover:text-primary-dark-300">
+          <div className="text-primary-800 hover:text-primary-800 dark:text-primary-dark-300 dark:hover:text-primary-dark-300 inline-flex items-center gap-2">
             <BookLock size={20} />
             <div className="uppercase">Director Only</div>
           </div>
@@ -279,10 +265,12 @@ export default function StatsMenuApp({
   );
 
   return (
-    <div className="space-y-1 overflow-hidden px-2 py-1">
+    <div className="space-y-3 overflow-hidden px-2 py-2">
       {nameTagsEnabled && NameField}
       {StatsMenu}
-      {role === "GM" && HideButton}
+      {role === "GM" && (
+        <div className="flex size-full justify-center">{HideButton}</div>
+      )}
     </div>
   );
 }

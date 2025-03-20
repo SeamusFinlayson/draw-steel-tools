@@ -5,18 +5,18 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-50 dark:focus-visible:ring-primary-dark",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-50 dark:focus-visible:ring-primary-dark",
   {
     variants: {
       variant: {
         default:
-          "bg-mirage-900 text-mirage-50 shadow hover:bg-mirage-900/90 dark:bg-mirage-200 dark:text-mirage-900 dark:hover:bg-mirage-200/90",
+          "bg-mirage-900 text-mirage-50 shadow-sm hover:bg-mirage-900/90 dark:bg-mirage-200 dark:text-mirage-900 dark:hover:bg-mirage-200/90",
         destructive:
-          "bg-red-500 text-mirage-50 shadow-sm hover:bg-red-500/90 dark:bg-red-900 dark:text-mirage-50 dark:hover:bg-red-900/90",
+          "bg-red-500 text-mirage-50 shadow-xs hover:bg-red-500/90 dark:bg-red-900 dark:text-mirage-50 dark:hover:bg-red-900/90",
         outline:
-          "border border-mirage-300 bg-transparent shadow-sm hover:bg-mirage-200 hover:text-mirage-900 dark:border-mirage-800 dark:bg-transparent dark:hover:bg-mirage-800 dark:hover:text-mirage-50",
+          "border border-mirage-300 bg-transparent shadow-xs hover:bg-mirage-200 hover:text-mirage-900 dark:border-mirage-800 dark:bg-transparent dark:hover:bg-mirage-800 dark:hover:text-mirage-50",
         secondary:
-          "bg-mirage-300/80 text-mirage-900 shadow-sm hover:bg-mirage-300/60 dark:bg-mirage-800 dark:text-mirage-50 dark:hover:bg-mirage-800/80",
+          "bg-mirage-300/80 text-mirage-900 shadow-xs hover:bg-mirage-300/60 dark:bg-mirage-800 dark:text-mirage-50 dark:hover:bg-mirage-800/80",
         ghost:
           "hover:bg-mirage-200 hover:text-mirage-900 dark:hover:bg-white/10 dark:hover:text-mirage-50",
         link: "text-mirage-900 underline-offset-4 hover:underline dark:text-mirage-50",

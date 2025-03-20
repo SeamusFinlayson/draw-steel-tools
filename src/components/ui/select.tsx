@@ -22,7 +22,7 @@ const SelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-mirage-300 bg-mirage-50 px-3 py-2 text-sm shadow-sm ring-offset-white placeholder:text-mirage-500 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-50 dark:border-mirage-800 dark:bg-mirage-950 dark:ring-offset-mirage-950 dark:placeholder:text-mirage-400 dark:focus:ring-primary-dark [&>span]:line-clamp-1",
+      "flex h-9 w-full items-center justify-between whitespace-nowrap rounded-md border border-mirage-300 bg-mirage-50 px-3 py-2 text-sm shadow-xs ring-offset-white placeholder:text-mirage-500 focus:border-transparent focus:outline-hidden focus:ring-2 focus:ring-primary disabled:cursor-not-allowed disabled:opacity-50 dark:border-mirage-800 dark:bg-mirage-950 dark:ring-offset-mirage-950 dark:placeholder:text-mirage-400 dark:focus:ring-primary-dark [&>span]:line-clamp-1",
       className,
     )}
     {...props}
@@ -121,7 +121,7 @@ const SelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-2 pr-8 text-sm outline-none focus:bg-mirage-100 focus:text-mirage-900 data-[disabled]:pointer-events-none data-[disabled]:opacity-50 dark:focus:bg-mirage-900 dark:focus:text-mirage-50",
+      "relative flex w-full cursor-default select-none items-center rounded-xs py-1.5 pl-2 pr-8 text-sm outline-hidden focus:bg-mirage-100 focus:text-mirage-900 data-disabled:pointer-events-none data-disabled:opacity-50 dark:focus:bg-mirage-900 dark:focus:text-mirage-50",
       className,
     )}
     {...props}

@@ -520,7 +520,7 @@ function SettingsRow({
     <div>
       <div
         className={cn(
-          "flex min-h-16 items-center justify-start gap-4 rounded bg-mirage-200 p-2 dark:bg-mirage-900",
+          "flex min-h-16 items-center justify-start gap-4 rounded-sm bg-mirage-200 p-2 dark:bg-mirage-900",
           { "rounded-b-none": last === false },
         )}
       >
