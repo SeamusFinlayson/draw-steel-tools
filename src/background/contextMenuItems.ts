@@ -4,11 +4,11 @@ import menuIcon from "@/menuIcon";
 import { Settings } from "@/metadataHelpers/settingMetadataHelpers";
 import { getSelectedItems } from "@/metadataHelpers/itemMetadataHelpers";
 
-const NAME_HEIGHT = 44;
-const HERO_STATS_HEIGHT = 300;
-const MONSTER_STATS_HEIGHT = 128;
-const HIDE_HEIGHT = 40;
-const PADDING = 8;
+const VERTICAL_PADDING = 16;
+const NAME_HEIGHT = 36 + 12;
+const HERO_STATS_HEIGHT = 178;
+const MONSTER_STATS_HEIGHT = 54;
+const ACCESS_TOGGLE_HEIGHT = 36 + 12;
 
 export default async function createContextMenuItems(
   settings: Settings,
@@ -60,7 +60,10 @@ function createPlayerMenu(
     ],
     embed: {
       url: `/src/contextMenu/contextMenu.html?themeMode=${themeMode}`,
-      height: (nameTagsEnabled ? NAME_HEIGHT : 0) + HERO_STATS_HEIGHT + PADDING,
+      height:
+        (nameTagsEnabled ? NAME_HEIGHT : 0) +
+        HERO_STATS_HEIGHT +
+        VERTICAL_PADDING,
     },
   });
 
@@ -100,7 +103,9 @@ function createPlayerMenu(
     embed: {
       url: `/src/contextMenu/contextMenu.html?themeMode=${themeMode}`,
       height:
-        (nameTagsEnabled ? NAME_HEIGHT : 0) + MONSTER_STATS_HEIGHT + PADDING,
+        (nameTagsEnabled ? NAME_HEIGHT : 0) +
+        MONSTER_STATS_HEIGHT +
+        VERTICAL_PADDING,
     },
   });
 }
@@ -138,8 +143,8 @@ function createGmMenu(themeMode: "DARK" | "LIGHT", nameTagsEnabled: boolean) {
       height:
         (nameTagsEnabled ? NAME_HEIGHT : 0) +
         HERO_STATS_HEIGHT +
-        PADDING +
-        HIDE_HEIGHT,
+        VERTICAL_PADDING +
+        ACCESS_TOGGLE_HEIGHT,
     },
   });
 
@@ -175,8 +180,8 @@ function createGmMenu(themeMode: "DARK" | "LIGHT", nameTagsEnabled: boolean) {
       height:
         (nameTagsEnabled ? NAME_HEIGHT : 0) +
         MONSTER_STATS_HEIGHT +
-        PADDING +
-        HIDE_HEIGHT,
+        VERTICAL_PADDING +
+        ACCESS_TOGGLE_HEIGHT,
     },
   });
 }
@@ -308,6 +313,7 @@ function createRemoveStats() {
         (items) => {
           items.forEach((item) => {
             item.metadata[getPluginId("metadata")] = undefined;
+            item.metadata[getPluginId("name")] = undefined;
           });
         },
       );

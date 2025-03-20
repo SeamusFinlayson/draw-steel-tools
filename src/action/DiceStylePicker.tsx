@@ -33,10 +33,10 @@ export default function DiceStylePicker({
         >
           <SwatchBook className="shrink-0" />
           {currentDieStyle === undefined ? (
-            <div className="h-6 w-full rounded outline outline-1 -outline-offset-2 dark:outline-white/20" />
+            <div className="h-6 w-full rounded-sm outline outline-1 -outline-offset-2 dark:outline-white/20" />
           ) : (
             <div
-              className="h-6 w-full rounded"
+              className="h-6 w-full rounded-sm"
               style={{ backgroundColor: currentDieStyle.color }}
             />
           )}

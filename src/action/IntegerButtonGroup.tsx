@@ -19,7 +19,7 @@ export default function IntegerButtonGroup({
         key={i}
         value={i.toString()}
         className={cn(
-          "w-full px-0 outline-none hover:bg-purple-100/40 focus-visible:bg-purple-100/40 dark:hover:bg-mirage-50/5 dark:focus-visible:bg-mirage-50/5",
+          "w-full px-0 outline-hidden hover:bg-purple-100/40 focus-visible:bg-purple-100/40 dark:hover:bg-mirage-50/5 dark:focus-visible:bg-mirage-50/5",
           {
             "bg-primary/20 text-primary hover:bg-primary/25 focus-visible:bg-primary/25 dark:bg-primary-dark/20 dark:text-primary-dark dark:hover:bg-primary-dark/25 dark:focus-visible:bg-primary-dark/25":
               i === value,

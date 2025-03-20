@@ -65,7 +65,7 @@ export default function TrackerInput({
               onUserConfirm={updateHandler}
               clearContentOnFocus={clearContentOnFocus}
               className={cn(
-                "w-full bg-transparent px-2 outline-none",
+                "w-full bg-transparent px-2 outline-hidden",
                 inputProps?.className,
               )}
               placeholder={labelStyle === "PLACEHOLDER" ? label : undefined}

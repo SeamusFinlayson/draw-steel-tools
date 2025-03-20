@@ -30,21 +30,21 @@ export default function MoreDropDown() {
         <ScrollArea className="h-full">
           <div className="grid w-full grid-cols-1 items-center gap-2 p-1">
             <LinkButton
-              className="rounded border-none"
+              className="rounded-sm border-none"
               name="Patreon"
               icon={<Patreon />}
               href={"https://www.patreon.com/SeamusFinlayson"}
               tooltipProps={{ side: "left", sideOffset: 8 }}
             />
             <LinkButton
-              className="rounded border-none"
+              className="rounded-sm border-none"
               name="Change Log"
               icon={<History />}
               href={"https://www.patreon.com/collection/1364023?view=expanded"}
               tooltipProps={{ side: "left", sideOffset: 8 }}
             />
             <LinkButton
-              className="rounded border-none"
+              className="rounded-sm border-none"
               name="Instructions"
               icon={<QuestionMark />}
               href={
@@ -53,7 +53,7 @@ export default function MoreDropDown() {
               tooltipProps={{ side: "left", sideOffset: 8 }}
             />
             <LinkButton
-              className="rounded border-none"
+              className="rounded-sm border-none"
               name="Report Bug"
               icon={<Bug />}
               href="https://discord.gg/WMp9bky4be"
