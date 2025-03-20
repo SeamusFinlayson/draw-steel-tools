@@ -28,19 +28,18 @@ export default function TrackerInput({
   inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
 }): React.JSX.Element {
   const [hasFocus, setHasFocus] = useState(false);
-  const [hasHover, setHasHover] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   return (
-    <div className="w-full pt-0.5 text-text-primary dark:text-text-primary-dark">
+    <div className="text-text-primary dark:text-text-primary-dark w-full pt-0.5">
       <div>
         <div className="space-y-1">
           {(labelStyle === "VISIBLE" || labelStyle === "HIDDEN") && (
             <label
               htmlFor={name}
               className={cn(
-                "block text-xs font-normal text-text-secondary dark:text-text-secondary-dark",
+                "text-text-secondary dark:text-text-secondary-dark block text-xs font-normal",
                 { "invisible w-0 text-nowrap": labelStyle === "HIDDEN" },
               )}
             >
@@ -49,7 +48,7 @@ export default function TrackerInput({
           )}
 
           <div
-            className="flex h-9 rounded-md border border-text-secondary dark:border-white/20"
+            className="border-text-secondary flex h-9 rounded-md border dark:border-white/20"
             onClick={(e) => e.stopPropagation()}
           >
             <PartiallyControlledInput
@@ -59,8 +58,6 @@ export default function TrackerInput({
               name={name}
               onFocus={() => setHasFocus(true)}
               onBlur={() => setHasFocus(false)}
-              onMouseEnter={() => setHasHover(true)}
-              onMouseLeave={() => setHasHover(false)}
               parentValue={parentValue.toString()}
               onUserConfirm={updateHandler}
               clearContentOnFocus={clearContentOnFocus}
