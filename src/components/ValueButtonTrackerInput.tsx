@@ -9,36 +9,38 @@ export default function ValueButtonTrackerInput({
   parentValue,
   color = "DEFAULT",
   updateHandler,
-  buttonOnClick,
-  buttonIcon,
+  buttonProps,
   label,
+  labelTitle,
 }: {
   parentValue: number;
   color?: InputColor | "DEFAULT";
   updateHandler: (target: HTMLInputElement) => void;
-  buttonOnClick: () => void;
-  buttonIcon: React.JSX.Element;
+  buttonProps?: React.ButtonHTMLAttributes<HTMLButtonElement>;
   label: string;
+  labelTitle?: string;
 }): React.JSX.Element {
   const [hasFocus, setHasFocus] = useState(false);
 
   const button = (
     <button
-      title="Spend Recovery"
-      className="flex size-9 shrink-0 items-center justify-center outline-hidden hover:bg-white/10 focus-visible:bg-white/10"
-      onClick={buttonOnClick}
-    >
-      {buttonIcon}
-    </button>
+      {...buttonProps}
+      className={cn(
+        "flex size-9 shrink-0 items-center justify-center outline-hidden hover:bg-white/10 focus-visible:bg-white/10",
+        buttonProps?.className,
+      )}
+    />
   );
 
   return (
     <div className="group text-text-primary dark:text-text-primary-dark w-full">
-      <NameValueLabel
-        name={label}
-        value={parentValue.toString()}
-        showValue={hasFocus && parentValue !== 0}
-      />
+      <div title={labelTitle}>
+        <NameValueLabel
+          name={label}
+          value={parentValue.toString()}
+          showValue={hasFocus && parentValue !== 0}
+        />
+      </div>
 
       <InputBackground className="overflow-clip" color={color}>
         <div className="flex">
@@ -52,7 +54,7 @@ export default function ValueButtonTrackerInput({
               "w-full bg-transparent px-2 text-center outline-hidden",
             )}
           />
-          {button}
+          {buttonProps && button}
         </div>
       </InputBackground>
     </div>

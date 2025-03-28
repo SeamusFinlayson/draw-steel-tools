@@ -36,7 +36,7 @@ import CounterTracker from "@/components/CounterTrackerInput";
 import NameInput from "@/components/NameInput";
 import BarTrackerInput from "@/components/BarTrackerInput";
 import ValueButtonTrackerInput from "@/components/ValueButtonTrackerInput";
-import { HeartPulseIcon } from "lucide-react";
+import { HeartCrackIcon, HeartPulseIcon } from "lucide-react";
 
 export default function StatsMenuApp({
   initialToken,
@@ -77,7 +77,7 @@ export default function StatsMenuApp({
     writeTokenValueToItem(token.item.id, [[name, value]]);
   }
 
-  function setStatValue(
+  function setStatValues(
     values: [id: StatMetadataID, value: number | boolean][],
   ) {
     setToken((prev) => ({ ...prev, ...Object.entries(values) }));
@@ -152,6 +152,7 @@ export default function StatsMenuApp({
         >
           <BarTrackerInput
             label={"Stamina"}
+            labelTitle={`Winded Value: ${Math.trunc(token.staminaMaximum / 2)}`}
             color="RED"
             parentValue={token.stamina.toString()}
             parentMax={token.staminaMaximum.toString()}
@@ -162,15 +163,15 @@ export default function StatsMenuApp({
               handleStatInputChange(
                 STAMINA_MAXIMUM_METADATA_ID,
                 target,
-                token.stamina,
+                token.staminaMaximum,
               )
             }
           />
         </div>
-        <ValueTrackerInput
+        <ValueButtonTrackerInput
           label={"Temporary Stamina"}
           color="GREEN"
-          parentValue={token.temporaryStamina.toString()}
+          parentValue={token.temporaryStamina}
           updateHandler={(target) =>
             handleStatInputChange(
               TEMP_STAMINA_METADATA_ID,
@@ -178,6 +179,18 @@ export default function StatsMenuApp({
               token.temporaryStamina,
             )
           }
+          buttonProps={{
+            title: "Apply to Stamina",
+            children: <HeartCrackIcon />,
+            className: token.temporaryStamina < 0 ? "" : "hidden",
+            onClick: () => {
+              if (token.temporaryStamina >= 0) return;
+              setStatValues([
+                [STAMINA_METADATA_ID, token.stamina + token.temporaryStamina],
+                [TEMP_STAMINA_METADATA_ID, 0],
+              ]);
+            },
+          }}
         />
 
         {token.type !== "MONSTER" && (
@@ -194,12 +207,12 @@ export default function StatsMenuApp({
                 )
               }
               incrementHandler={() =>
-                setStatValue([
+                setStatValues([
                   [HEROIC_RESOURCE_METADATA_ID, token.heroicResource + 1],
                 ])
               }
               decrementHandler={() =>
-                setStatValue([
+                setStatValues([
                   [HEROIC_RESOURCE_METADATA_ID, token.heroicResource - 1],
                 ])
               }
@@ -212,14 +225,15 @@ export default function StatsMenuApp({
                 handleStatInputChange(SURGES_METADATA_ID, target, token.surges)
               }
               incrementHandler={() =>
-                setStatValue([[SURGES_METADATA_ID, token.surges + 1]])
+                setStatValues([[SURGES_METADATA_ID, token.surges + 1]])
               }
               decrementHandler={() =>
-                setStatValue([[SURGES_METADATA_ID, token.surges - 1]])
+                setStatValues([[SURGES_METADATA_ID, token.surges - 1]])
               }
             />
             <ValueButtonTrackerInput
               label={"Recoveries"}
+              labelTitle={`Recovery Value: ${Math.trunc(token.staminaMaximum / 3)}`}
               parentValue={token.recoveries}
               updateHandler={(target) =>
                 handleStatInputChange(
@@ -228,23 +242,26 @@ export default function StatsMenuApp({
                   token.recoveries,
                 )
               }
-              buttonOnClick={() => {
-                if (token.recoveries <= 0) return;
-                if (token.staminaMaximum <= 0) return;
-                if (token.stamina >= token.staminaMaximum) return;
-                const staminaIncrease = Math.trunc(token.staminaMaximum / 3);
-                const newStamina = token.stamina + staminaIncrease;
-                setStatValue([
-                  [
-                    STAMINA_METADATA_ID,
-                    newStamina < token.staminaMaximum
-                      ? newStamina
-                      : token.staminaMaximum,
-                  ],
-                  [RECOVERIES_METADATA_ID, token.recoveries - 1],
-                ]);
+              buttonProps={{
+                title: "Spend Recovery",
+                children: <HeartPulseIcon />,
+                onClick: () => {
+                  if (token.recoveries <= 0) return;
+                  if (token.staminaMaximum <= 0) return;
+                  if (token.stamina >= token.staminaMaximum) return;
+                  const staminaIncrease = Math.trunc(token.staminaMaximum / 3);
+                  const newStamina = token.stamina + staminaIncrease;
+                  setStatValues([
+                    [
+                      STAMINA_METADATA_ID,
+                      newStamina < token.staminaMaximum
+                        ? newStamina
+                        : token.staminaMaximum,
+                    ],
+                    [RECOVERIES_METADATA_ID, token.recoveries - 1],
+                  ]);
+                },
               }}
-              buttonIcon={<HeartPulseIcon />}
             />
           </>
         )}

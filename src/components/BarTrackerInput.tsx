@@ -11,6 +11,7 @@ export default function BarTrackerInput({
   maxUpdateHandler,
   color = "DEFAULT",
   label,
+  labelTitle,
 }: {
   parentValue: string;
   valueUpdateHandler: (target: HTMLInputElement) => void;
@@ -18,13 +19,14 @@ export default function BarTrackerInput({
   maxUpdateHandler: (target: HTMLInputElement) => void;
   color?: InputColor | "DEFAULT";
   label: string;
+  labelTitle?: string;
 }): React.JSX.Element {
   const [valueHasFocus, setValueHasFocus] = useState(false);
   const [maxHasFocus, setMaxHasFocus] = useState(false);
 
   return (
     <div className="group text-text-primary dark:text-text-primary-dark w-full">
-      <div className="pointer-events-none grid grid-cols-2 pb-0.5">
+      <div title={labelTitle} className="grid grid-cols-2 pb-0.5">
         <div
           data-visible={
             !(valueHasFocus && parentValue !== "0") &&
