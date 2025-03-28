@@ -23,7 +23,8 @@ export default function NameInput({
           placeholder="Token Name"
         />
         <button
-          className="invisible w-0 items-center justify-center p-0.5 px-2 opacity-0 outline-hidden transition-opacity duration-150 group-focus-within:visible group-focus-within:w-auto group-focus-within:opacity-100 group-hover:visible group-hover:w-auto group-hover:opacity-100 hover:bg-white/10 focus-visible:bg-white/10"
+          title={parentValue === "" ? "Autofill" : "Clear"}
+          className="invisible flex w-0 shrink-0 items-center justify-center opacity-0 outline-hidden transition-opacity duration-150 group-focus-within:visible group-focus-within:w-9 group-focus-within:opacity-100 group-hover:visible group-hover:w-9 group-hover:opacity-100 hover:bg-white/10 focus-visible:bg-white/10"
           onClick={onActionClick}
         >
           {parentValue === "" ? <Sparkles /> : <XIcon />}

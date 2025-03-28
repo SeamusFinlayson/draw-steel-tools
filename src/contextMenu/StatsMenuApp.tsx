@@ -32,9 +32,11 @@ import {
   SURGES_METADATA_ID,
   TEMP_STAMINA_METADATA_ID,
 } from "@/metadataHelpers/itemMetadataIds";
-import Counter from "@/components/CounterTracker";
+import CounterTracker from "@/components/CounterTrackerInput";
 import NameInput from "@/components/NameInput";
 import BarTrackerInput from "@/components/BarTrackerInput";
+import ValueButtonTrackerInput from "@/components/ValueButtonTrackerInput";
+import { HeartPulseIcon } from "lucide-react";
 
 export default function StatsMenuApp({
   initialToken,
@@ -64,7 +66,7 @@ export default function StatsMenuApp({
     [],
   );
 
-  function handleStatUpdate(
+  function handleStatInputChange(
     name: StatMetadataID,
     target: HTMLInputElement,
     previousValue: number,
@@ -72,13 +74,14 @@ export default function StatsMenuApp({
     const value = getNewStatValue(name, target.value, previousValue);
 
     setToken((prev) => ({ ...prev, [name]: value }) as Token);
-    writeTokenValueToItem(token.item.id, name, value);
+    writeTokenValueToItem(token.item.id, [[name, value]]);
   }
 
-  function setStatValue(name: string, value: number) {
-    if (!isStatMetadataId(name)) throw "Error: invalid input name.";
-    setToken((prev) => ({ ...prev, [name]: value }) as Token);
-    writeTokenValueToItem(token.item.id, name, value);
+  function setStatValue(
+    values: [id: StatMetadataID, value: number | boolean][],
+  ) {
+    setToken((prev) => ({ ...prev, ...Object.entries(values) }));
+    writeTokenValueToItem(token.item.id, values);
   }
 
   function toggleHide() {
@@ -87,7 +90,7 @@ export default function StatsMenuApp({
 
     const value = !token.gmOnly;
     setToken((prev) => ({ ...prev, [name]: value }) as Token);
-    writeTokenValueToItem(token.item.id, name, value);
+    writeTokenValueToItem(token.item.id, [[name, value]]);
   }
 
   const [tokenName, setTokenName] = useState(initialTokenName);
@@ -153,10 +156,10 @@ export default function StatsMenuApp({
             parentValue={token.stamina.toString()}
             parentMax={token.staminaMaximum.toString()}
             valueUpdateHandler={(target) =>
-              handleStatUpdate(STAMINA_METADATA_ID, target, token.stamina)
+              handleStatInputChange(STAMINA_METADATA_ID, target, token.stamina)
             }
             maxUpdateHandler={(target) =>
-              handleStatUpdate(
+              handleStatInputChange(
                 STAMINA_MAXIMUM_METADATA_ID,
                 target,
                 token.stamina,
@@ -169,7 +172,7 @@ export default function StatsMenuApp({
           color="GREEN"
           parentValue={token.temporaryStamina.toString()}
           updateHandler={(target) =>
-            handleStatUpdate(
+            handleStatInputChange(
               TEMP_STAMINA_METADATA_ID,
               target,
               token.temporaryStamina,
@@ -179,60 +182,69 @@ export default function StatsMenuApp({
 
         {token.type !== "MONSTER" && (
           <>
-            <Counter
+            <CounterTracker
               label={"Heroic Resource"}
               color="BLUE"
               parentValue={token.heroicResource}
               updateHandler={(target) =>
-                handleStatUpdate(
+                handleStatInputChange(
                   HEROIC_RESOURCE_METADATA_ID,
                   target,
                   token.heroicResource,
                 )
               }
               incrementHandler={() =>
-                setStatValue(
-                  HEROIC_RESOURCE_METADATA_ID,
-                  token.heroicResource + 1,
-                )
+                setStatValue([
+                  [HEROIC_RESOURCE_METADATA_ID, token.heroicResource + 1],
+                ])
               }
               decrementHandler={() =>
-                setStatValue(
-                  HEROIC_RESOURCE_METADATA_ID,
-                  token.heroicResource - 1,
-                )
+                setStatValue([
+                  [HEROIC_RESOURCE_METADATA_ID, token.heroicResource - 1],
+                ])
               }
             />
-            <Counter
+            <CounterTracker
               label={"Surges"}
               color="GOLD"
               parentValue={token.surges}
               updateHandler={(target) =>
-                handleStatUpdate(SURGES_METADATA_ID, target, token.surges)
+                handleStatInputChange(SURGES_METADATA_ID, target, token.surges)
               }
               incrementHandler={() =>
-                setStatValue(SURGES_METADATA_ID, token.surges + 1)
+                setStatValue([[SURGES_METADATA_ID, token.surges + 1]])
               }
               decrementHandler={() =>
-                setStatValue(SURGES_METADATA_ID, token.surges - 1)
+                setStatValue([[SURGES_METADATA_ID, token.surges - 1]])
               }
             />
-            <Counter
+            <ValueButtonTrackerInput
               label={"Recoveries"}
               parentValue={token.recoveries}
               updateHandler={(target) =>
-                handleStatUpdate(
+                handleStatInputChange(
                   RECOVERIES_METADATA_ID,
                   target,
                   token.recoveries,
                 )
               }
-              incrementHandler={() =>
-                setStatValue(RECOVERIES_METADATA_ID, token.recoveries + 1)
-              }
-              decrementHandler={() =>
-                setStatValue(RECOVERIES_METADATA_ID, token.recoveries - 1)
-              }
+              buttonOnClick={() => {
+                if (token.recoveries <= 0) return;
+                if (token.staminaMaximum <= 0) return;
+                if (token.stamina >= token.staminaMaximum) return;
+                const staminaIncrease = Math.trunc(token.staminaMaximum / 3);
+                const newStamina = token.stamina + staminaIncrease;
+                setStatValue([
+                  [
+                    STAMINA_METADATA_ID,
+                    newStamina < token.staminaMaximum
+                      ? newStamina
+                      : token.staminaMaximum,
+                  ],
+                  [RECOVERIES_METADATA_ID, token.recoveries - 1],
+                ]);
+              }}
+              buttonIcon={<HeartPulseIcon />}
             />
           </>
         )}

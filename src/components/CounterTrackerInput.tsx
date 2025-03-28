@@ -7,7 +7,7 @@ import { Minus } from "./icons/Minus";
 import { NameValueLabel } from "./NameValueLabel";
 import InputBackground from "./InputBackground";
 
-export default function Counter({
+export default function CounterTracker({
   parentValue,
   color = "DEFAULT",
   updateHandler,

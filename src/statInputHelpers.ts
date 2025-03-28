@@ -7,6 +7,8 @@ import {
   StatMetadataID,
   TEMP_STAMINA_METADATA_ID,
   statMetadataIDs,
+  SURGES_METADATA_ID,
+  RECOVERIES_METADATA_ID,
 } from "./metadataHelpers/itemMetadataIds";
 
 export function isStatMetadataId(id: string): id is StatMetadataID {
@@ -15,8 +17,7 @@ export function isStatMetadataId(id: string): id is StatMetadataID {
 
 export async function writeTokenValueToItem(
   itemId: string,
-  id: StatMetadataID,
-  value: number | boolean,
+  values: [id: StatMetadataID, value: number | boolean][],
 ) {
   await OBR.scene.items.updateItems([itemId], (items) => {
     // Throw error if more than one token selected
@@ -29,7 +30,7 @@ export async function writeTokenValueToItem(
       const itemMetadata = item.metadata[getPluginId("metadata")];
       item.metadata[getPluginId("metadata")] = {
         ...(typeof itemMetadata === "object" ? itemMetadata : {}),
-        ...{ [id]: value },
+        ...Object.fromEntries(values),
       };
     }
   });
@@ -78,6 +79,8 @@ function restrictValueRange(id: StatMetadataID, value: number): number {
       break;
     case TEMP_STAMINA_METADATA_ID:
     case HEROIC_RESOURCE_METADATA_ID:
+    case SURGES_METADATA_ID:
+    case RECOVERIES_METADATA_ID:
       if (value > 999) {
         value = 999;
       } else if (value < -999) {
