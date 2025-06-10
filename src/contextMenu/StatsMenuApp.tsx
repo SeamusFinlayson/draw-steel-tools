@@ -73,7 +73,7 @@ export default function StatsMenuApp({
   ) {
     const value = getNewStatValue(name, target.value, previousValue);
 
-    setToken((prev) => ({ ...prev, [name]: value }) as Token);
+    setToken((prev) => ({ ...prev, [name]: value }) satisfies Token);
     writeTokenValueToItem(token.item.id, [[name, value]]);
   }
 
@@ -89,7 +89,7 @@ export default function StatsMenuApp({
     if (!isStatMetadataId(name)) throw "Error: invalid input name.";
 
     const value = !token.gmOnly;
-    setToken((prev) => ({ ...prev, [name]: value }) as Token);
+    setToken((prev) => ({ ...prev, [name]: value }) satisfies Token);
     writeTokenValueToItem(token.item.id, [[name, value]]);
   }
 

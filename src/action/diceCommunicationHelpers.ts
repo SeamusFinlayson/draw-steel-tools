@@ -4,35 +4,25 @@ import { useEffect, useState } from "react";
 
 export function createRollRequest(args: {
   gmOnly: boolean;
-  combination?: "HIGHEST" | "LOWEST" | "SUM" | "NONE";
-  bonus?: number;
+  bonus: number;
+  netEdges: number;
   styleId?: string;
-}): DiceProtocol.RollRequest {
+}): DiceProtocol.PowerRollRequest {
   return {
     id: `drawSteelTools-${Date.now()}`,
     replyChannel: DiceProtocol.ROLL_RESULT_CHANNEL,
     ...args,
-    dice: [
-      {
-        id: Math.random().toString(),
-        type: "D10",
-      },
-      {
-        id: Math.random().toString(),
-        type: "D10",
-      },
-    ],
   };
 }
 
 type DiceRoller = {
   connect: () => void;
   disconnect: () => void;
-  onRollResult: (rollResult: DiceProtocol.RollResult) => void;
+  onRollResult: (rollResult: DiceProtocol.PowerRollResult) => void;
 } & (
   | {
       config: DiceProtocol.DiceRollerConfig;
-      requestRoll: (rollRequest: DiceProtocol.RollRequest) => void;
+      requestRoll: (rollRequest: DiceProtocol.PowerRollRequest) => void;
     }
   | {
       config: undefined;
@@ -82,22 +72,28 @@ export function useDiceRoller({
       }),
     [onRollResult],
   );
-  if (config === undefined) {
-    return {
-      config,
-      connect: requestDiceRollerConfig,
-      disconnect: () => setConfig(undefined),
-      requestRoll: undefined,
-      onRollResult,
-    };
-  }
+  const getUnsetConfig = () => ({
+    config: undefined,
+    connect: requestDiceRollerConfig,
+    disconnect: () => setConfig(undefined),
+    requestRoll: undefined,
+    onRollResult,
+  });
+
+  if (config === undefined) return getUnsetConfig();
+
+  const channel = config.rollRequestChannels.find((val) =>
+    val.includes("powerRollRequest"),
+  );
+
+  if (channel === undefined) return getUnsetConfig();
 
   return {
     config,
     connect: requestDiceRollerConfig,
     disconnect: () => setConfig(undefined),
     requestRoll: (rollRequest) => {
-      OBR.broadcast.sendMessage(config.rollRequestChannel, rollRequest, {
+      OBR.broadcast.sendMessage(channel, rollRequest, {
         destination: "LOCAL",
       });
     },

@@ -128,7 +128,7 @@ export default function App(): React.JSX.Element {
   const diceRoller = useDiceRoller({ onRollResult: handleRollResult });
 
   return (
-    <div className="flex h-full flex-col overflow-clip bg-mirage-50/75 dark:bg-mirage-950/55 dark:text-mirage-200">
+    <div className="bg-mirage-50/75 dark:bg-mirage-950/55 dark:text-mirage-200 flex h-full flex-col overflow-clip">
       <div className="flex h-[64px] items-center gap-2 p-4">
         <h1 className="w-full text-lg font-bold">Draw Steel Tools</h1>
 
@@ -241,7 +241,7 @@ export default function App(): React.JSX.Element {
 
           <div className="mt-2 grid grid-cols-2 items-end gap-4">
             <div className="w-full space-y-2">
-              <h2 className="text-xs font-normal text-text-secondary dark:text-text-secondary-dark">
+              <h2 className="text-text-secondary dark:text-text-secondary-dark text-xs font-normal">
                 Edges
               </h2>
               <IntegerButtonGroup
@@ -252,7 +252,7 @@ export default function App(): React.JSX.Element {
               />
             </div>
             <div className="w-full space-y-2">
-              <h2 className="text-xs font-normal text-text-secondary dark:text-text-secondary-dark">
+              <h2 className="text-text-secondary dark:text-text-secondary-dark text-xs font-normal">
                 Bonus
               </h2>
               <div className="flex w-full items-center justify-between gap-1">
@@ -286,7 +286,7 @@ export default function App(): React.JSX.Element {
               </div>
             </div>
             <div className="w-full space-y-2">
-              <h2 className="text-xs font-normal text-text-secondary dark:text-text-secondary-dark">
+              <h2 className="text-text-secondary dark:text-text-secondary-dark text-xs font-normal">
                 Banes
               </h2>
               <IntegerButtonGroup
@@ -299,7 +299,7 @@ export default function App(): React.JSX.Element {
             {diceRoller.config !== undefined &&
               diceRoller.config.styles.length > 0 && (
                 <div className="w-full space-y-2">
-                  <h2 className="text-xs font-normal text-text-secondary dark:text-text-secondary-dark">
+                  <h2 className="text-text-secondary dark:text-text-secondary-dark text-xs font-normal">
                     Dice Color
                   </h2>
 
@@ -322,9 +322,9 @@ export default function App(): React.JSX.Element {
                         diceRoller.requestRoll(
                           createRollRequest({
                             gmOnly: true,
-                            combination: "SUM",
                             bonus: bonus + getBonusFromNetEdges(edges - banes),
                             styleId: diceStyle?.id,
+                            netEdges: edges - banes,
                           }),
                         );
                       }
@@ -343,9 +343,9 @@ export default function App(): React.JSX.Element {
                       diceRoller.requestRoll(
                         createRollRequest({
                           gmOnly: false,
-                          combination: "SUM",
                           bonus: bonus + getBonusFromNetEdges(edges - banes),
                           styleId: diceStyle?.id,
+                          netEdges: edges - banes,
                         }),
                       );
                     }
@@ -367,7 +367,7 @@ export default function App(): React.JSX.Element {
 const DiceRollViewer = ({ result }: { result: Roll }) => (
   <div className="space-y-2">
     <div>
-      <div className="flex min-h-9 flex-wrap items-center justify-evenly gap-y-2 rounded-t-md border border-text-secondary p-2 px-4 dark:border-white/20">
+      <div className="border-text-secondary flex min-h-9 flex-wrap items-center justify-evenly gap-y-2 rounded-t-md border p-2 px-4 dark:border-white/20">
         <TextAndLabel
           text={`${result.rolls[0]}, ${result.rolls[1]}`}
           label="Roll"
@@ -384,7 +384,7 @@ const DiceRollViewer = ({ result }: { result: Roll }) => (
           <TextAndLabel {...netEdgesTextAndLabel(result.netEdges)} />
         )}
       </div>
-      <div className="flex items-center justify-evenly gap-4 rounded-b-md border border-t-0 border-text-secondary bg-mirage-50 p-2 px-4 dark:border-white/20 dark:bg-mirage-950/70">
+      <div className="border-text-secondary bg-mirage-50 dark:bg-mirage-950/70 flex items-center justify-evenly gap-4 rounded-b-md border border-t-0 p-2 px-4 dark:border-white/20">
         <TextAndLabel text={result.total.toString()} label="Total" />
         <TextAndLabel
           text={result.critical ? "Critical" : `${result.tier}`}
@@ -401,7 +401,7 @@ const TextAndLabel = ({ text, label }: { text: string; label: string }) => {
       <div className="text-2xs text-text-secondary dark:text-text-secondary-dark">
         {label}
       </div>
-      <div className="text-base text-text-primary dark:text-text-primary-dark">
+      <div className="text-text-primary dark:text-text-primary-dark text-base">
         {text}
       </div>
     </div>

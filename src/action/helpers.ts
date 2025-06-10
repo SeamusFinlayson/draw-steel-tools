@@ -54,7 +54,7 @@ export function powerRoll(
   const naturalResult = total;
   const critical = naturalResult >= 19;
 
-  // Apply single banes
+  // Apply single edges
   const netEdges = edges - banes;
   bonus += getBonusFromNetEdges(netEdges);
   const rollResult = naturalResult + bonus;
@@ -66,7 +66,7 @@ export function powerRoll(
   else if (rollResult < 17) tier = 2;
   else tier = 3;
 
-  // Apply double banes
+  // Apply double edges
   switch (netEdges) {
     case -2:
       if (tier > 1) tier -= 1;
