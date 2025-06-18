@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Bug, EllipsisVertical } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-export default function MoreDropDown() {
+export default function MoreDropDown({ children }: { children?: any }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -26,9 +26,14 @@ export default function MoreDropDown() {
           <EllipsisVertical />
         </Button>
       </PopoverTrigger>
-      <PopoverContent sideOffset={8}>
+      <PopoverContent
+        sideOffset={8}
+        //TODO: this fixes the tooltip automatically popping up but prevents keyboard focus
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
         <ScrollArea className="h-full">
           <div className="grid w-full grid-cols-1 items-center gap-2 p-1">
+            {children}
             <LinkButton
               className="rounded-sm border-none"
               name="Patreon"

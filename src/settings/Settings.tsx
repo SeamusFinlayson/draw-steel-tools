@@ -41,40 +41,14 @@ export default function Settings(): React.JSX.Element {
 
   return (
     <div className="h-full">
-      <div className="flex h-full flex-col rounded-2xl border bg-mirage-100 text-mirage-900 outline outline-2 -outline-offset-1 outline-primary dark:bg-mirage-950 dark:text-mirage-50 dark:outline-primary-dark">
-        <ScrollArea className="h-full 2xs:px-3 xs:px-4" type="scroll">
+      <div className="bg-mirage-100 text-mirage-900 outline-primary dark:bg-mirage-950 dark:text-mirage-50 dark:outline-primary-dark flex h-full flex-col rounded-2xl border outline-2 -outline-offset-1">
+        <ScrollArea className="2xs:px-3 xs:px-4 h-full" type="scroll">
           <div className="flex flex-wrap items-center justify-between gap-2 pt-4">
             <div>
               <h1 className="text-2xl font-light">Settings</h1>
-              <p className="text-xs text-mirage-400">
+              <p className="text-mirage-400 text-xs">
                 <i>Draw Steel Tools</i>
               </p>
-            </div>
-            <div className="flex gap-2 pr-0.5">
-              <LinkButton
-                name="Patreon"
-                icon={<Patreon />}
-                href={"https://www.patreon.com/SeamusFinlayson"}
-              />
-              <LinkButton
-                name="Change Log"
-                icon={<History />}
-                href={
-                  "https://www.patreon.com/collection/1364023?view=expanded"
-                }
-              />
-              <LinkButton
-                name="Instructions"
-                icon={<QuestionMark />}
-                href={
-                  "https://github.com/SeamusFinlayson/draw-steel-stat-bubbles"
-                }
-              />
-              <LinkButton
-                name="Report Bug"
-                icon={<Bug />}
-                href="https://discord.gg/WMp9bky4be"
-              />
             </div>
           </div>
 
@@ -126,7 +100,7 @@ export default function Settings(): React.JSX.Element {
             <TabsContent value="scene">
               {sceneSettings.initializationDone && (
                 <div className="space-y-4">
-                  <div className="text-balance pl-1">
+                  <div className="pl-1 text-balance">
                     Override the active room's settings for this scene.
                   </div>
 
@@ -205,7 +179,7 @@ export default function Settings(): React.JSX.Element {
                   )}
 
                   {sceneOverridesCount < 4 && (
-                    <div className="flex flex-wrap gap-2 pl-0.5 pr-8">
+                    <div className="flex flex-wrap gap-2 pr-8 pl-0.5">
                       <AddSceneSettingButton
                         visible={sceneSettings.offset === undefined}
                         initializeSettings={() => {
@@ -319,7 +293,7 @@ function VerticalOffsetSettings({
       description="Move stat bubbles up or down"
       action={
         <Input
-          className="w-20 bg-mirage-50/30 focus:bg-mirage-50/40 dark:bg-mirage-950/40 dark:focus:bg-mirage-950/80"
+          className="bg-mirage-50/30 focus:bg-mirage-50/40 dark:bg-mirage-950/40 dark:focus:bg-mirage-950/80 w-20"
           value={offset}
           onChange={(e) => setOffset(e.target.value)}
           onBlur={(e) => {
@@ -436,7 +410,7 @@ function ShowHealthBarsSettings({
         description="Only show when creatures drop to certain fractions of their health"
         action={
           <Input
-            className="w-20 bg-mirage-50/30 focus:bg-mirage-50/40 dark:bg-mirage-950/40 dark:focus:bg-mirage-950/80"
+            className="bg-mirage-50/30 focus:bg-mirage-50/40 dark:bg-mirage-950/40 dark:focus:bg-mirage-950/80 w-20"
             value={segments}
             onChange={(e) => setSegments(e.target.value)}
             onBlur={(e) => {
@@ -520,16 +494,16 @@ function SettingsRow({
     <div>
       <div
         className={cn(
-          "flex min-h-16 items-center justify-start gap-4 rounded-sm bg-mirage-200 p-2 dark:bg-mirage-900",
+          "bg-mirage-200 dark:bg-mirage-900 flex min-h-16 items-center justify-start gap-4 rounded-sm p-2",
           { "rounded-b-none": last === false },
         )}
       >
-        <div className="size-10 min-w-10 stroke-mirage-950 p-2 dark:stroke-mirage-50">
+        <div className="stroke-mirage-950 dark:stroke-mirage-50 size-10 min-w-10 p-2">
           {icon}
         </div>
         <div>
           <label htmlFor="vertical offset">{label}</label>
-          <div className="text-xs text-mirage-400">{description}</div>
+          <div className="text-mirage-400 text-xs">{description}</div>
         </div>
         <div className="ml-auto">{action}</div>
       </div>
@@ -553,7 +527,7 @@ function SubSettingsRow({
 }): React.JSX.Element {
   return (
     <div
-      className={cn("overflow-clip transition-max-height duration-300", {
+      className={cn("transition-max-height overflow-clip duration-300", {
         "max-h-60 ease-in": !collapseElement,
         "max-h-0 ease-out": collapseElement,
       })}
@@ -562,14 +536,14 @@ function SubSettingsRow({
       <div className="pt-0.5">
         <div
           className={cn(
-            "flex min-h-16 items-center justify-start gap-4 rounded-none bg-mirage-200 p-2 dark:bg-mirage-900",
+            "bg-mirage-200 dark:bg-mirage-900 flex min-h-16 items-center justify-start gap-4 rounded-none p-2",
             { "rounded-b": last },
           )}
         >
           <div className="size-10 min-w-10 p-2"></div>
           <div>
             <label htmlFor="vertical offset">{label}</label>
-            <div className="text-xs text-mirage-400">{description}</div>
+            <div className="text-mirage-400 text-xs">{description}</div>
           </div>
           <div className="ml-auto">{action}</div>
         </div>
@@ -587,7 +561,7 @@ function RemoveSetting({
     <div className="pt-0.5">
       <div
         className={cn(
-          "flex items-center justify-start gap-4 rounded-none bg-mirage-200 dark:bg-mirage-900",
+          "bg-mirage-200 dark:bg-mirage-900 flex items-center justify-start gap-4 rounded-none",
           { "rounded-b": true },
         )}
       >

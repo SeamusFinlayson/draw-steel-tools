@@ -26,7 +26,7 @@ export default function LinkButton({
       <TooltipTrigger asChild>
         <a
           className={cn(
-            "flex size-10 items-center justify-center rounded-full border border-mirage-300 fill-mirage-800 stroke-mirage-800 outline-hidden hover:bg-mirage-200 focus-visible:ring-2 focus-visible:ring-primary dark:border-mirage-800 dark:fill-mirage-50 dark:stroke-mirage-50 dark:hover:bg-mirage-800 dark:focus-visible:ring-primary-dark",
+            "border-mirage-300 fill-mirage-800 stroke-mirage-800 hover:bg-mirage-200 focus-visible:ring-primary dark:border-mirage-800 dark:fill-mirage-50 dark:stroke-mirage-50 dark:hover:bg-mirage-800 dark:focus-visible:ring-primary-dark flex size-10 items-center justify-center rounded-full border outline-hidden focus-visible:ring-2",
             className,
           )}
           target="_blank"

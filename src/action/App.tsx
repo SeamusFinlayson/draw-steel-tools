@@ -126,6 +126,14 @@ export default function App(): React.JSX.Element {
   );
 
   const diceRoller = useDiceRoller({ onRollResult: handleRollResult });
+  const [diceConfigHasNeverBeenConnected, setDiceConfigHasNeverBeenConnected] =
+    useState(true);
+
+  useEffect(() => {
+    if (diceRoller.config !== undefined) {
+      setDiceConfigHasNeverBeenConnected(false);
+    }
+  }, [diceRoller]);
 
   return (
     <div className="bg-mirage-50/75 dark:bg-mirage-950/55 dark:text-mirage-200 flex h-full flex-col overflow-clip">
@@ -134,21 +142,53 @@ export default function App(): React.JSX.Element {
 
         <div className="flex gap-2">
           {diceRoller.config === undefined ? (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  className="size-10 shrink-0 rounded-full"
-                  onClick={() => {
-                    diceRoller.connect();
-                  }}
-                  variant={"ghost"}
-                  size={"icon"}
-                >
-                  <PlugZap />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom">Connect Dice Roller</TooltipContent>
-            </Tooltip>
+            diceConfigHasNeverBeenConnected ? (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    asChild
+                    className="size-10 shrink-0 rounded-full"
+                    onClick={() => {
+                      diceRoller.connect();
+                    }}
+                    variant={"ghost"}
+                    size={"icon"}
+                  >
+                    <a
+                      href="https://connected-dice-homepage.onrender.com/"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <img
+                        src="../icons/diceExtensionIcon.svg"
+                        className="size-6"
+                      />
+                    </a>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  Get Connected Dice
+                </TooltipContent>
+              </Tooltip>
+            ) : (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    className="size-10 shrink-0 rounded-full"
+                    onClick={() => {
+                      diceRoller.connect();
+                    }}
+                    variant={"ghost"}
+                    size={"icon"}
+                  >
+                    <PlugZap />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom">
+                  Connect Dice Roller
+                </TooltipContent>
+              </Tooltip>
+            )
           ) : (
             <Tooltip>
               <TooltipTrigger asChild>
@@ -169,26 +209,35 @@ export default function App(): React.JSX.Element {
               </TooltipContent>
             </Tooltip>
           )}
-          {playerRole === "GM" ? (
-            <Button
-              size={"icon"}
-              variant={"ghost"}
-              className="size-10 shrink-0 rounded-full"
-              onClick={async () => {
-                const themeMode = (await OBR.theme.getTheme()).mode;
-                OBR.popover.open({
-                  id: getPluginId("settings"),
-                  url: `/src/settings/settings.html?themeMode=${themeMode}`,
-                  height: 500,
-                  width: 400,
-                });
-              }}
-            >
-              <Settings2 />
-            </Button>
-          ) : (
-            <MoreDropDown />
-          )}
+
+          <MoreDropDown>
+            {playerRole === "GM" && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    onFocusCapture={(e) => (e.target.tabIndex = -1)}
+                    size={"icon"}
+                    variant={"ghost"}
+                    className="size-10 shrink-0 rounded-sm"
+                    onClick={async () => {
+                      const themeMode = (await OBR.theme.getTheme()).mode;
+                      OBR.popover.open({
+                        id: getPluginId("settings"),
+                        url: `/src/settings/settings.html?themeMode=${themeMode}`,
+                        height: 500,
+                        width: 400,
+                      });
+                    }}
+                  >
+                    <Settings2 />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="left" sideOffset={8}>
+                  {"Settings"}
+                </TooltipContent>
+              </Tooltip>
+            )}
+          </MoreDropDown>
         </div>
       </div>
 
