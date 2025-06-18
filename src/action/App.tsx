@@ -159,10 +159,7 @@ export default function App(): React.JSX.Element {
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <img
-                        src="../icons/diceExtensionIcon.svg"
-                        className="size-6"
-                      />
+                      <img src="/diceExtensionIcon.svg" className="size-6" />
                     </a>
                   </Button>
                 </TooltipTrigger>
