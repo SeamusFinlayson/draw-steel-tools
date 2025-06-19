@@ -155,7 +155,7 @@ export default function App(): React.JSX.Element {
                     size={"icon"}
                   >
                     <a
-                      href="https://connected-dice-homepage.seamus-finlayson.ca"
+                      href="https://seamus-finlayson.ca/pages/connected-dice"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
