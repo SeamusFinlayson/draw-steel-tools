@@ -155,7 +155,7 @@ export default function App(): React.JSX.Element {
                     size={"icon"}
                   >
                     <a
-                      href="https://connected-dice-homepage.onrender.com/"
+                      href="https://connected-dice-homepage.seamus-finlayson.ca"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
