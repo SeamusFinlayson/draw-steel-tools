@@ -1,8 +1,9 @@
 import OBR from "@owlbear-rodeo/sdk";
 import { getPluginId } from "../getPluginId";
-import menuIcon from "@/menuIcon";
+import dragonHeadIcon from "@/icons/dragonHeadIcon";
 import { Settings } from "@/metadataHelpers/settingMetadataHelpers";
 import { getSelectedItems } from "@/metadataHelpers/itemMetadataHelpers";
+import knightHelmetIcon from "@/icons/knightHelmetIcon copy";
 
 const VERTICAL_PADDING = 16;
 const NAME_HEIGHT = 36 + 12;
@@ -29,8 +30,8 @@ function createPlayerMenu(
     id: getPluginId("player-menu"),
     icons: [
       {
-        icon: menuIcon,
-        label: "Edit Stats",
+        icon: knightHelmetIcon,
+        label: "Edit Hero",
         filter: {
           every: [
             { key: "layer", value: "CHARACTER", coordinator: "||" },
@@ -71,8 +72,8 @@ function createPlayerMenu(
     id: getPluginId("player-menu-monster"),
     icons: [
       {
-        icon: menuIcon,
-        label: "Edit Stats",
+        icon: dragonHeadIcon,
+        label: "Edit Character",
         filter: {
           every: [
             { key: "layer", value: "CHARACTER", coordinator: "||" },
@@ -115,8 +116,8 @@ function createGmMenu(themeMode: "DARK" | "LIGHT", nameTagsEnabled: boolean) {
     id: getPluginId("gm-menu"),
     icons: [
       {
-        icon: menuIcon,
-        label: "Edit Stats",
+        icon: knightHelmetIcon,
+        label: "Edit Hero",
         filter: {
           every: [
             { key: "layer", value: "CHARACTER", coordinator: "||" },
@@ -152,8 +153,8 @@ function createGmMenu(themeMode: "DARK" | "LIGHT", nameTagsEnabled: boolean) {
     id: getPluginId("gm-menu-monster"),
     icons: [
       {
-        icon: menuIcon,
-        label: "Edit Stats",
+        icon: dragonHeadIcon,
+        label: "Edit Monster",
         filter: {
           every: [
             { key: "layer", value: "CHARACTER", coordinator: "||" },
@@ -191,7 +192,7 @@ function createAddStats() {
     id: getPluginId("add-hero"),
     icons: [
       {
-        icon: menuIcon,
+        icon: knightHelmetIcon,
         label: "Add Hero",
         filter: {
           every: [
@@ -225,8 +226,8 @@ function createAddStats() {
     id: getPluginId("add-monster"),
     icons: [
       {
-        icon: menuIcon,
-        label: "Add NPC",
+        icon: dragonHeadIcon,
+        label: "Add Monster",
         filter: {
           every: [
             { key: "layer", value: "CHARACTER", coordinator: "||" },
@@ -264,8 +265,8 @@ function createRemoveStats() {
     id: getPluginId("remove-stats"),
     icons: [
       {
-        icon: menuIcon,
-        label: "Remove Stats",
+        icon: dragonHeadIcon,
+        label: "Remove Character",
         filter: {
           some: [
             { key: "layer", value: "CHARACTER", coordinator: "||" },
@@ -277,12 +278,31 @@ function createRemoveStats() {
               operator: "!=",
             },
           ],
+          max: 1,
           roles: ["GM"],
         },
       },
       {
-        icon: menuIcon,
-        label: "Remove Stats",
+        icon: dragonHeadIcon,
+        label: "Remove Characters",
+        filter: {
+          some: [
+            { key: "layer", value: "CHARACTER", coordinator: "||" },
+            { key: "layer", value: "MOUNT" },
+            { key: "type", value: "IMAGE" },
+            {
+              key: ["metadata", getPluginId("metadata")],
+              value: undefined,
+              operator: "!=",
+            },
+          ],
+          min: 2,
+          roles: ["GM"],
+        },
+      },
+      {
+        icon: dragonHeadIcon,
+        label: "Remove Character",
         filter: {
           some: [
             { key: "layer", value: "CHARACTER", coordinator: "||" },

@@ -35,7 +35,7 @@ export default function CounterTracker({
       <InputBackground className="overflow-clip" color={color}>
         <div className="flex">
           <button
-            className="flex h-full w-full items-center justify-center outline-hidden hover:bg-white/10 focus-visible:bg-white/10"
+            className="flex h-full w-full items-center justify-center outline-hidden transition-colors hover:bg-white/10 focus-visible:bg-white/10"
             onClick={decrementHandler}
           >
             <Minus />
@@ -51,7 +51,7 @@ export default function CounterTracker({
             )}
           />
           <button
-            className="flex h-full w-full items-center justify-center outline-hidden hover:bg-white/10 focus-visible:bg-white/10"
+            className="flex h-full w-full items-center justify-center outline-hidden transition-colors hover:bg-white/10 focus-visible:bg-white/10"
             onClick={incrementHandler}
           >
             <Plus />

@@ -26,7 +26,7 @@ export default function ValueButtonTrackerInput({
     <button
       {...buttonProps}
       className={cn(
-        "flex size-9 shrink-0 items-center justify-center outline-hidden hover:bg-white/10 focus-visible:bg-white/10",
+        "flex size-9 shrink-0 items-center justify-center outline-hidden transition-colors hover:bg-white/10 focus-visible:bg-white/10",
         buttonProps?.className,
       )}
     />
