@@ -26,12 +26,9 @@ export default function MoreDropDown({ children }: { children?: any }) {
           <EllipsisVertical />
         </Button>
       </PopoverTrigger>
-      <PopoverContent
-        sideOffset={8}
-        //TODO: this fixes the tooltip automatically popping up but prevents keyboard focus
-        onOpenAutoFocus={(e) => e.preventDefault()}
-      >
+      <PopoverContent sideOffset={8}>
         <ScrollArea className="h-full">
+          <div aria-label="autofocus capture" tabIndex={0} />
           <div className="grid w-full grid-cols-1 items-center gap-2 p-1">
             {children}
             <LinkButton

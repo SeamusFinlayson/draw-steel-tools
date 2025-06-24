@@ -3,7 +3,7 @@ import { getPluginId } from "../getPluginId";
 import dragonHeadIcon from "@/icons/dragonHeadIcon";
 import { Settings } from "@/metadataHelpers/settingMetadataHelpers";
 import { getSelectedItems } from "@/metadataHelpers/itemMetadataHelpers";
-import knightHelmetIcon from "@/icons/knightHelmetIcon copy";
+import knightHelmetIcon from "@/icons/knightHelmetIcon";
 
 const VERTICAL_PADDING = 16;
 const NAME_HEIGHT = 36 + 12;
@@ -73,7 +73,7 @@ function createPlayerMenu(
     icons: [
       {
         icon: dragonHeadIcon,
-        label: "Edit Character",
+        label: "Edit Monster",
         filter: {
           every: [
             { key: "layer", value: "CHARACTER", coordinator: "||" },

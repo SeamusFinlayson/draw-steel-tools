@@ -212,7 +212,6 @@ export default function App(): React.JSX.Element {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Button
-                    onFocusCapture={(e) => (e.target.tabIndex = -1)}
                     size={"icon"}
                     variant={"ghost"}
                     className="size-10 shrink-0 rounded-sm"

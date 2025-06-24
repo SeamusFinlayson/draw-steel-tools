@@ -12,7 +12,6 @@ import {
   getSelectedItems,
   parseItems,
 } from "../metadataHelpers/itemMetadataHelpers";
-import ValueTrackerInput from "../components/ValueTrackerInput";
 import { Button } from "@/components/ui/button";
 import BookLock from "@/components/icons/BookLock";
 import BookOpen from "@/components/icons/BookOpen";

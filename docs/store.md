@@ -1,71 +1,28 @@
 ---
-title: Stat Bubbles for D&D
-description: Health Bars and Armor Class for your D&D adventures!
+title: Draw Steel Tools
+description: Stamina and resource tracking + power rolls for Draw Steel!
 author: Seamus Finlayson
-image: https://github.com/SeamusFinlayson/Bubbles-for-Owlbear-Rodeo/assets/77430559/6e2bcd42-d59e-4482-8fc9-c514bfd3a1c5
-icon: https://owlbear-rodeo-bubbles-extension.onrender.com/logo.png
+image: https://raw.githubusercontent.com/SeamusFinlayson/draw-steel-stat-bubbles/refs/heads/main/docs/header.webp
+icon: https://draw-steel-tools.seamus-finlayson.ca/logo.svg
 tags:
   - combat
-manifest: https://owlbear-rodeo-bubbles-extension.onrender.com/manifest.json
-learn-more: https://github.com/SeamusFinlayson/Bubbles-for-Owkbear-Rodeo
+manifest: https://draw-steel-tools.seamus-finlayson.ca/manifest.json
+learn-more: https://seamus-finlayson.ca/pages/draw-steel-tools
 ---
 
-# Stat Bubbles for D&D
+# Draw Steel Tools
 
-_Health Bars and Armor Class for your D&D adventures!_
+_Stamina and resource tracking + power rolls for Draw Steel!_
 
-## How it works
+## How it Works
 
-This extension provides a simple way to track:
+Draw Steel Tools lets you easily manage combat with token level trackers that create health bars and bubbles so you can reference them at a glance.
 
-- Current Hit Points
-- Hit Point Maximum
-- Temporary Hit Points
-- and Armor Class
+There are two options for adding character information to a token. You can initialize it as a hero or a monster. Heroes token track stamina, their heroic resource, surges, and recoveries. Monster tokens are simplified and only track stamina.
 
-Stat Bubbles also features:
+In the top left corner menu you'll find trackers for shared resources (malice and hero tokens) and the power roll utility. Hero tokens are visible to anyone in your game so they can update the tracker whenever they use them. Malice is only visible to users with GM access. The power roll utility lets you make power rolls accounting for edges and any bonuses you add to the roll. You can upgrade this functionality by getting the Connected Dice extension which converts the power rolls made in this extension to physics based rolls and shares them with everyone in your room.
 
-- A per token setting to hide stats from players
-- Name tags that will never overlap with health bars
-- A tools for applying area of effect (AEO) spells
-- Settings to configure health bar positions
-- An option to show the players segmented enemy health bars
-
-### The Basics
-
-**Right click** on a token to access the **context menu** and edit its stats.
-
-<img name="Player Context Menu" src="https://github.com/user-attachments/assets/476d0377-19ff-4f3c-a50f-df62c38adaa7" width=300>
-
-**This extension does math for you!** The inline math feature makes repetitive calculations effortless. To add 6 to your HP type +6 and press Enter. To subtract 6 from your HP type -6 and press Enter. This works for every stat.
-
-<img name="Inline Math Demo" src="https://github.com/user-attachments/assets/440423a0-3ee7-4f2e-9a36-c65da92b354e" width=600>
-
-In a hurry? press **Tab** to cycle through the bubbles.
-
-This extension works with tokens on the **Prop**, **Mount**, and **Character** layers.
-
-The health bar is **created automatically** if a number greater than 0 is in the max health field. The temporary HP and armor class bubbles work the same way.
-
-### Game / Dungeon Masters
-
-The GM gets access to more configuration options.
-
-By clicking the button at the bottom of the context menu the GM can lock their players out of viewing tokens' stats.
-
-<img name="GM Context Menu" src="https://github.com/user-attachments/assets/fbdc127d-41cc-4023-90fd-575909ad5569" width=300>
-
-### Action Menu
-
-The action menu provides access to all of a rooms tokens in one place.
-
-Quickly apply AOE effects or modify multiple tokens using the built in operations.
-
-Roll dice either publicly or secretly using the command line. Your rolls are stored in the scene roll log. Check out [RPG Dice Roller](https://dice-roller.github.io/documentation/guide/notation/) for details on the supported dice notations.
-
-![Action Menu](https://github.com/user-attachments/assets/86d39c02-219d-47b6-986d-6f5785e71d07)
-
-### Name tags
+### Name Tags
 
 Name tags can be enabled from the settings menu. Once enabled both players and GMs can set a token's name in the context menu embed. The autofill icon sets the name tag to the token's name property found under the accessibility settings. The name that you give the token will also be displayed in initiative tracking extensions.
 
@@ -87,6 +44,6 @@ I may accept feature requests but - as I have limited time and development plans
 
 ## Support
 
-If you need support for this extension you can message me in the [Owlbear Rodeo Discord](https://discord.gg/yWSErB6Qaj) @Seamus or open an issue on [GitHub](https://github.com/SeamusFinlayson/Bubbles-for-Owkbear-Rodeo).
+If you need support for this extension you can message me in the Owlbear Rodeo Discord @Seamus or open an issue on [GitHub](https://github.com/SeamusFinlayson/Bubbles-for-Owkbear-Rodeo).
 
 If you like using this extension consider [supporting me on Patreon](https://www.patreon.com/SeamusFinlayson) where paid members can request features. You can also follow along there as a free member for updates.
