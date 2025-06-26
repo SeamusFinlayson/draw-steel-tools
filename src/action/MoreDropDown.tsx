@@ -49,9 +49,7 @@ export default function MoreDropDown({ children }: { children?: any }) {
               className="rounded-sm border-none"
               name="Instructions"
               icon={<QuestionMark />}
-              href={
-                "https://github.com/SeamusFinlayson/draw-steel-stat-bubbles"
-              }
+              href={"https://seamus-finlayson.ca/pages/draw-steel-tools"}
               tooltipProps={{ side: "left", sideOffset: 8 }}
             />
             <LinkButton
