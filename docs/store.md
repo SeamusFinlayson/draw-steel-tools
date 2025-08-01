@@ -16,23 +16,51 @@ _Stamina and resource tracking + power rolls for Draw Steel!_
 
 ## How it Works
 
-Draw Steel Tools lets you easily manage combat with token level trackers that create health bars and bubbles so you can reference them at a glance.
+Draw Steel Tools lets you easily manage combat in draw steel with on-token trackers, health bars, name tags, and a power roll utility.
 
-There are two options for adding character information to a token. You can initialize it as a hero or a monster. Heroes token track stamina, their heroic resource, surges, and recoveries. Monster tokens are simplified and only track stamina.
+### Managing Tokens
 
-In the top left corner menu you'll find trackers for shared resources (malice and hero tokens) and the power roll utility. Hero tokens are visible to anyone in your game so they can update the tracker whenever they use them. Malice is only visible to users with GM access. The power roll utility lets you make power rolls accounting for edges and any bonuses you add to the roll. You can upgrade this functionality by getting the Connected Dice extension which converts the power rolls made in this extension to physics based rolls and shares them with everyone in your room.
+There are two options for adding character information to a token. You can initialize it as a hero or a monster. Heroes' tokens track stamina, their heroic resource, surges, and recoveries. Monster tokens are simplified and only track stamina.
 
-### Name Tags
+![Add Character](https://raw.githubusercontent.com/SeamusFinlayson/draw-steel-stat-bubbles/refs/heads/main/docs/addCharacter.webp)
 
-Name tags can be enabled from the settings menu. Once enabled both players and GMs can set a token's name in the context menu embed. The autofill icon sets the name tag to the token's name property found under the accessibility settings. The name that you give the token will also be displayed in initiative tracking extensions.
+Once you have created your hero or monster you will be able to edit their stats in the context menu, which has a few convenient features that may not be immediately obvious.
 
-<img name="Name tag context menu" src="https://github.com/user-attachments/assets/9f349b52-4918-464c-99ff-7db63550e31d" width=300>
+![Context Menu](https://raw.githubusercontent.com/SeamusFinlayson/draw-steel-stat-bubbles/refs/heads/main/docs/contextMenu.webp)
+
+**Inline math** lets you add and subtract damage and other resources in the text box. You can bypass inline math by typing "=" before the number you want to enter, which is useful when dealing with negative numbers. You can use inline math in any box in the context menu, as well as the malice and hero tokens boxes in the action menu.
+
+There are a few variations that you can try typing into the tracker text fields:
+
+- "7" will set the trackers value to 7
+- "+7" will add 7 to the current tracker value
+- "=+7" will set the trackers value to 7
+- "-7" will subtract 7 from the current tracker value
+- "=-7" will set the trackers value to -7
+
+**The cracked heart** that appears in the temporary stamina text field when the temporary stamina value is negative will apply the negative value to your stamina when you click on it. When you take damage you can use inline math to apply the entirety of the damage to your temporary stamina and apply any overflow to your regular stamina by quickly clicking this button.
+
+**The pulsing heart** in the recoveries text field will expend a recovery when you click on it and automatically add your recovery value to your stamina.
+
+To save some time you can hover over the stamina label to check your winded value, and you can hover over the recoveries label to check your recovery value.
+
+The visibility toggle at the bottom determines whether a tokens stats are shared or only visible to the director. By default, when you add a hero to a token its stats are shared with your players. When you add a monster to a token the, stats are kept secret from your players. You can change the visibility by clicking on the toggle. Health bars for tokens with hidden stats appear slightly darker.
+
+You can click the remove character button to delete all the character information and stats on a token.
+
+### Action Menu
+
+In the top left corner you'll find the action menu with trackers for shared resources (malice and hero tokens) and the power roll utility. Hero tokens are visible to anyone in your game so they can update the tracker whenever they use them. Malice is only visible to users with GM access.
+
+The power roll utility lets you make power rolls accounting for edges and any bonuses you add to the roll. You can upgrade this functionality by getting the Connected Dice extension which converts the power rolls made in this extension into physics based rolls and shares them with everyone in your room.
+
+![Action Menu](https://raw.githubusercontent.com/SeamusFinlayson/draw-steel-stat-bubbles/refs/heads/main/docs/actionMenu.webp)
 
 ### Settings
 
-The settings menu allows GMs to customize the extension to better fit their use case. There are room level settings that apply to every scene opened in the current room, and scene level settings which override the room settings and apply no matter what room the scene is being viewed in.
+You can open the extension setting menu by clicking on the three-dots icon in the action menu and clicking on settings item in the dropdown. This is separate from your Owlbear Rodeo settings. I recommend enabling name tags, and turning on Show Health Bars and setting Segments to two to display when creatures with hidden stats are winded.
 
-![Settings Menu](https://github.com/user-attachments/assets/a8758eca-e727-4509-933d-456c57210fc9)
+I intend to remove scene level settings overrides from the extension soon so you should avoid relying on these.
 
 ### Uninstalling
 
