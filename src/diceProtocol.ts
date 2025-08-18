@@ -78,6 +78,8 @@ export namespace DiceProtocol {
     replyChannel: string;
     /** Prevent rolls from being shown to users without GM access. */
     gmOnly: boolean;
+    /** The style for all dice. This can overridden by setting the styleId for a specific die. If no style is given the default will be used. */
+    styleId?: string;
   }
 
   /** Format for messages requesting a dice roll. */
@@ -86,8 +88,7 @@ export namespace DiceProtocol {
     combination?: "HIGHEST" | "LOWEST" | "SUM" | "NONE";
     /** A value added to the roll result. */
     bonus?: number;
-    /** The style for all dice. This can overridden by setting the styleId for a specific die. If no style is given the default will be used. */
-    styleId?: string;
+    /** Dice to be rolled. */
     dice: Die[];
   }
 
@@ -100,14 +101,21 @@ export namespace DiceProtocol {
     result: DieResult[];
   };
 
-  /** Format for messages requesting a power roll. */
-  export interface PowerRollRequest extends RollRequestBase {
+  /** Protocol for Draw Steel Power Rolls with additional handling. */
+  export interface PowerRollProperties {
     /** A value added to the roll result. */
     bonus: number;
-    /** Edges - Banes, see Draw Steel Rules. */
+    /** If true an additional bonus of +2 is added to the roll. */
+    hasSkill: boolean;
+    /** Edges - Banes. */
     netEdges: number;
-    /** The style for all dice. This can overridden by setting the styleId for a specific die. If no style is given the default will be used. */
-    styleId?: string;
+    /** Number of d10s and selection strategy in dice notation. */
+    dice: "2d10" | "3d10kh2" | "3d10kl2";
+  }
+
+  /** Format for messages requesting a power roll. */
+  export interface PowerRollRequest extends RollRequestBase {
+    rollProperties: PowerRollProperties;
   }
 
   /** Format for messages sent when a power roll has been completed. */
@@ -117,5 +125,6 @@ export namespace DiceProtocol {
     /** Access requirement given in the request that initiated this roll. */
     gmOnly: boolean;
     result: DieResult[];
+    rollProperties: PowerRollProperties;
   };
 }

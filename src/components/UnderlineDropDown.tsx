@@ -17,9 +17,9 @@ export default function UnderlineDropDown({
     <div
       className={cn(
         animationDuration150(animateOnlyWhenRootActive),
-        "rounded-b-sm px-0.5 text-xs transition-all",
+        "rounded-b-sm text-xs transition-all",
         {
-          "translate-y-0 opacity-100": true,
+          "-translate-y-0 opacity-100": true,
           "pointer-events-none -translate-y-2 opacity-0":
             !hasFocus || content === "",
         },

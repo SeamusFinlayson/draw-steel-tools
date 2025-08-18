@@ -1,6 +1,6 @@
 import OBR, { Metadata } from "@owlbear-rodeo/sdk";
 import { getPluginId } from "@/getPluginId";
-import { Roll, Trackers } from "./types";
+import { DieResult, Roll, Trackers } from "./types";
 import {
   getPluginMetadata,
   readNumberFromObject,
@@ -34,40 +34,62 @@ export async function getTrackersFromScene(sceneMetadata?: Metadata) {
 }
 
 export function powerRoll(
-  bonus: number,
-  edges: number,
-  banes: number,
-  playerName: string,
-  rollValues?: number[],
+  args: {
+    bonus: number;
+    hasSkill: boolean;
+    netEdges: number;
+    playerName: string;
+  } & (
+    | {
+        rollMethod: "rollNow";
+        dice: "2d10" | "3d10kh2" | "3d10kl2";
+      }
+    | {
+        rollMethod: "givenValues";
+        dieValues: number[];
+        selectionStrategy: "highest" | "lowest";
+      }
+  ),
 ): Roll {
   // Validate Input
-  const naturalBonus = bonus;
-  if (!validEdgeValue(edges)) throw new Error("Invalid Edges Value");
-  if (!validEdgeValue(banes)) throw new Error("Invalid Banes Value");
+  const naturalBonus = args.bonus;
+  if (!validNetEdgesValue(args.netEdges))
+    throw new Error("Invalid Edges Value");
 
-  // Make roll
-  if (rollValues === undefined) rollValues = powerRollDice();
-  let total = 0;
-  for (const roll of rollValues) {
-    total += roll;
+  // Get die results
+  let dieResults: DieResult[];
+  if (args.rollMethod === "rollNow") {
+    dieResults = getDieResults(
+      powerRollDice(args.dice !== "2d10" ? 3 : 2),
+      args.dice !== "3d10kl2" ? "highest" : "lowest",
+    );
+  } else {
+    dieResults = getDieResults(args.dieValues, args.selectionStrategy);
   }
-  const naturalResult = total;
+
+  // Add selected dice to total
+  let naturalResult = 0;
+  for (const dieResult of dieResults) {
+    if (!dieResult.dropped) naturalResult += dieResult.value;
+  }
   const critical = naturalResult >= 19;
 
   // Apply single edges
-  const netEdges = edges - banes;
-  bonus += getBonusFromNetEdges(netEdges);
-  const rollResult = naturalResult + bonus;
+  let totalBonus =
+    naturalBonus +
+    getBonusFromNetEdges(args.netEdges) +
+    (args.hasSkill ? 2 : 0);
+  const total = naturalResult + totalBonus;
 
   // Get tier
   let tier = 0;
   if (critical) tier = 3;
-  else if (rollResult < 12) tier = 1;
-  else if (rollResult < 17) tier = 2;
+  else if (total < 12) tier = 1;
+  else if (total < 17) tier = 2;
   else tier = 3;
 
   // Apply double edges
-  switch (netEdges) {
+  switch (args.netEdges) {
     case -2:
       if (tier > 1) tier -= 1;
       break;
@@ -78,13 +100,14 @@ export function powerRoll(
 
   return {
     timeStamp: Date.now(),
-    playerName,
+    playerName: args.playerName,
     bonus: naturalBonus,
-    netEdges,
+    hasSkill: args.hasSkill,
+    netEdges: args.netEdges,
     critical,
     tier,
-    total: rollResult,
-    rolls: rollValues,
+    total,
+    dieResults,
   };
 }
 
@@ -98,19 +121,34 @@ export function getBonusFromNetEdges(netEdges: number) {
   return 0;
 }
 
-function validEdgeValue(value: number) {
-  const validEdgeOrBane = [0, 1, 2];
+function validNetEdgesValue(value: number) {
+  const validEdgeOrBane = [-2, -1, 0, 1, 2];
   if (!validEdgeOrBane.includes(value)) return false;
   return true;
 }
 
-function powerRollDice() {
-  const rolls: number[] = [];
-  for (let i = 0; i < 2; i++) {
+function powerRollDice(quantity: number) {
+  const dieValues: number[] = [];
+  for (let i = 0; i < quantity; i++) {
     const value = Math.trunc(Math.random() * 10) + 1;
-    rolls.push(value);
+    dieValues.push(value);
   }
-  return rolls;
+  return dieValues;
+}
+
+function getDieResults(
+  dieValues: number[],
+  selectionStrategy: "highest" | "lowest",
+): DieResult[] {
+  return dieValues
+    .sort((a, b) => a - b)
+    .map((val, index) => ({
+      value: val,
+      dropped:
+        selectionStrategy === "lowest"
+          ? index >= 2
+          : index < dieValues.length - 2,
+    }));
 }
 
 export const netEdgesTextAndLabel = (

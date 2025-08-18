@@ -1,12 +1,18 @@
+export type DieResult = {
+  value: number;
+  dropped: boolean;
+};
+
 export type Roll = {
   timeStamp: number;
   playerName: string;
   bonus: number;
+  hasSkill: boolean;
   netEdges: number;
   tier: number;
   critical: boolean;
   total: number;
-  rolls: number[];
+  dieResults: DieResult[];
 };
 
 export type Trackers = {

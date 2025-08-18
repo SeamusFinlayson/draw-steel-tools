@@ -4,7 +4,7 @@ import React, { useRef, useState } from "react";
 import { InputColor } from "@/colorHelpers";
 import UnderlineDropDown from "./UnderlineDropDown";
 
-export default function TrackerInput({
+export default function ActionInput({
   parentValue,
   showParentValue = false,
   color = "DEFAULT",
