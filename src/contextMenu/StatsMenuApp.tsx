@@ -273,7 +273,7 @@ export default function StatsMenuApp({
       <Button
         variant={"ghost"}
         className={cn(
-          "text-text-primary dark:text-text-primary-dark dark:hover:bg-mirage-50/15 flex rounded-full text-sm font-normal",
+          "text-text-primary dark:text-text-primary-dark dark:hover:bg-mirage-50/15 flex text-sm font-normal active:rounded-[18px]",
         )}
         onClick={() => toggleHide()}
       >

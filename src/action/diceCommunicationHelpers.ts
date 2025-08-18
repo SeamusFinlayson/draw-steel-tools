@@ -6,12 +6,17 @@ export function createRollRequest(args: {
   gmOnly: boolean;
   bonus: number;
   netEdges: number;
+  hasSkill: boolean;
+  dice: "2d10" | "3d10kh2" | "3d10kl2";
   styleId?: string;
 }): DiceProtocol.PowerRollRequest {
+  const { gmOnly, styleId, ...rollProperties } = args;
   return {
     id: `drawSteelTools-${Date.now()}`,
     replyChannel: DiceProtocol.ROLL_RESULT_CHANNEL,
-    ...args,
+    styleId,
+    gmOnly,
+    rollProperties,
   };
 }
 
@@ -41,7 +46,7 @@ function requestDiceRollerConfig() {
 export function useDiceRoller({
   onRollResult,
 }: {
-  onRollResult: (rollResult: DiceProtocol.RollResult) => void;
+  onRollResult: (rollResult: DiceProtocol.PowerRollResult) => void;
 }): DiceRoller {
   const [config, setConfig] = useState<DiceProtocol.DiceRollerConfig>();
 
@@ -67,7 +72,7 @@ export function useDiceRoller({
   useEffect(
     () =>
       OBR.broadcast.onMessage(DiceProtocol.ROLL_RESULT_CHANNEL, (event) => {
-        const data = event.data as DiceProtocol.RollResult;
+        const data = event.data as DiceProtocol.PowerRollResult;
         onRollResult(data);
       }),
     [onRollResult],

@@ -16,6 +16,20 @@ export default {
     extend: {
       fontSize: { "2xs": "11px" },
       animation: { "inverse-bounce": "hiThere 0.5s infinite" },
+      keyframes: {
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+      },
       transitionProperty: {
         height: "height",
         "max-height": "max-height",
@@ -23,16 +37,18 @@ export default {
       colors: {
         mirage: {
           50: "#f4f5f9",
-          100: "#eaedf5",
-          200: "#dde1ee",
+          99: "#eaedf5",
+          100: "#e5e9f3",
+          199: "#dde1ee",
+          200: "#dadeed",
           300: "#c1c8e0",
           400: "#898fa7",
           500: "#6a708d",
           600: "#555974",
           700: "#464a5e",
           800: "#3d4051",
-          900: "#2d3143",
-          940: "#24283b",
+          900: "#333648",
+          901: "#2d3143",
           950: "#222639",
         },
         stat: {
