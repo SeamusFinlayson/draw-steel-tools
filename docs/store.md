@@ -75,3 +75,9 @@ I may accept feature requests but - as I have limited time and development plans
 If you need support for this extension you can message me in the Owlbear Rodeo Discord @Seamus or open an issue on [GitHub](https://github.com/SeamusFinlayson/Bubbles-for-Owkbear-Rodeo).
 
 If you like using this extension consider [supporting me on Patreon](https://www.patreon.com/SeamusFinlayson) where paid members can request features. You can also follow along there as a free member for updates.
+
+## License
+
+Draw Steel Tools is an independent product published under the DRAW
+STEEL Creator License and is not affiliated with MCDM Productions, LLC.
+DRAW STEEL © 2024 MCDM Productions, LLC.
